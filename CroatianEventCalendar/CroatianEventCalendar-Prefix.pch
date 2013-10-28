@@ -11,7 +11,30 @@
 #endif
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-    #import <CoreData/CoreData.h>
+#import "TestFlight.h"
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #endif
+
+#if DEBUG
+#define MGLog(args...)  NSLog( @"%@", [NSString stringWithFormat:args])
+#define LogMethod() NSLog(@"%@ %@ %s (line %d)", NSStringFromSelector(_cmd), self, __PRETTY_FUNCTION__, __LINE__)
+
+#else
+//DEBUG not defined:
+
+#define MGLog(args...)   //do nothing.
+#define LogMethod()
+
+#endif
+
+// Check if the "thing" pass'd is empty
+static inline BOOL isEmpty(id thing) {
+    return thing == nil
+    || (thing == [NSNull null])
+    || ([thing respondsToSelector:@selector(length)]
+        && [(NSData *)thing length] == 0)
+    || ([thing respondsToSelector:@selector(count)]
+        && [(NSArray *)thing count] == 0);
+}

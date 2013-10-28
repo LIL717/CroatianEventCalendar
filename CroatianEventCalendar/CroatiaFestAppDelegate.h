@@ -1,29 +1,28 @@
 //
-//  AppDelegate.h
-//  CroatianEventCalendar
+//  CroatiaFestAppDelegate.h
+//  CroatiaFest
 //
-//  Created by Lori Hill on 10/28/13.
-//  Copyright (c) 2013 Lori Hill. All rights reserved.
+//  Created by Lori Hill on 6/10/11.
+//  Copyright 2011 CroatiaFest. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "MasterViewController.h"
+#import "RootViewController.h"
 
 extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
 
-//@interface AppDelegate : UIResponder <UIApplicationDelegate>   //this was from template
-@interface AppDelegate : NSObject <UIApplicationDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate> {
+@interface CroatiaFestAppDelegate : NSObject <UIApplicationDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate> {
     
-@private
+@private    
     NSManagedObjectContext *managedObjectContext_;
     NSManagedObjectModel *managedObjectModel_;
-    
+
     // for downloading the xml data
     NSURLConnection *webConnection;
     NSMutableData *festivalData;
-    NSOperationQueue *parseQueue;
+    NSOperationQueue *parseQueue; 
     
 }
 
