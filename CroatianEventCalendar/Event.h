@@ -10,16 +10,16 @@
 
 @interface Event : NSManagedObject
 
-@property (nonatomic, retain) NSString * event;
-@property (nonatomic, retain) NSString * beginDate;
-@property (nonatomic, retain) NSString * endDate;
+@property (nonatomic, retain) NSNumber * eventId;
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSDate * beginDate;
+@property (nonatomic, retain) NSDate * endDate;
 @property (nonatomic, retain) NSString * location;
 @property (nonatomic, retain) NSString * email;
 @property (nonatomic, retain) NSString * phone;
 @property (nonatomic, retain) NSString * link;
 @property (nonatomic, retain) NSString * link_name;
-@property (nonatomic, retain) NSString * description;
-@property (nonatomic, retain) NSString * html;
+@property (nonatomic, retain) NSString * desc;
 @end
 
 @interface Event (CoreDataGeneratedAccessors)

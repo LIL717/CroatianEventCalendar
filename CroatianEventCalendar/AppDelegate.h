@@ -22,7 +22,7 @@ extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
     
     // for downloading the xml data
     NSURLConnection *webConnection;
-    NSMutableData *festivalData;
+    NSMutableData *eventData;
     NSOperationQueue *parseQueue;
     
 }
@@ -35,6 +35,6 @@ extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-- (void) deletePersistentStore;
+//- (void) deletePersistentStore;
 
 @end

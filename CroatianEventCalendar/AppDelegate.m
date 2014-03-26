@@ -23,11 +23,11 @@
 @interface AppDelegate ()
 
 @property (nonatomic, retain) NSURLConnection *webConnection;
-@property (nonatomic, retain) NSMutableData *festivalData;    // the data returned from the NSURLConnection
-@property (nonatomic, retain) NSOperationQueue *parseQueue;   // the queue that manages our NSOperation for parsing festival data
+@property (nonatomic, retain) NSMutableData *eventData;    // the data returned from the NSURLConnection
+@property (nonatomic, retain) NSOperationQueue *parseQueue;   // the queue that manages our NSOperation for parsing event data
 @property (nonatomic, assign) BOOL resetData;
 
-- (void) setUpViewControllers;
+//- (void) setUpViewControllers;
 - (void) setUpURLConnection;
 - (void) distributeParsedData:(NSDictionary *) parsedData;
 - (void) handleError:(NSError *)error;
@@ -39,13 +39,16 @@
 
 @synthesize window;
 @synthesize webConnection;
-@synthesize festivalData;
+@synthesize eventData;
 @synthesize parseQueue;
 @synthesize resetData;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+
+static NSString * const kEvents = @"events";
+
 
 
 
@@ -54,29 +57,28 @@
     
     LogMethod();
     
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddFestivalNotif object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kFestivalErrorNotif object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddEventNotif object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kEventErrorNotif object:nil];
 }
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     LogMethod ();
-    // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)navigationController.topViewController;
-        
-        UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
-    } else {
-        UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-        MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
-    }
+//    // Override point for customization after application launch.
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+//        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+//        splitViewController.delegate = (id)navigationController.topViewController;
+//        
+//        UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
+//        MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
+//        controller.managedObjectContext = self.managedObjectContext;
+//    } else {
+//        UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+//        MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
+//        controller.managedObjectContext = self.managedObjectContext;
+//    }
     // Override point for customization after application launch.
     //    [TestFlight takeOff:@"edbbcf45a655f8286ea1810a5e350c09_OTE2NjEyMDEyLTA1LTE4IDE4OjE2OjEyLjMyODAxMA"];
     //
@@ -89,17 +91,17 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(addParsedData:)
-                                                 name:kAddFestivalNotif
+                                                 name:kAddEventNotif
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(parsedDataError:)
-                                                 name:kFestivalErrorNotif
+                                                 name:kEventErrorNotif
                                                object:nil];
     
     self.resetData = YES; //use this bool to only reset core data once when new data is coming in
-    self.festivalData = nil;
-    [self setUpViewControllers];
-    [self.window makeKeyAndVisible];
+    self.eventData = nil;
+//    [self setUpViewControllers];
+//    [self.window makeKeyAndVisible];
     
     
     return YES;
@@ -128,11 +130,11 @@
     
     [self setUpURLConnection];
     self.resetData = YES; //use this bool to only reset core data once when new data is coming in
-    self.festivalData = nil;
+    self.eventData = nil;
     
     
 }
-- (void) setUpViewControllers {
+//- (void) setUpViewControllers {
 //    LogMethod ();
 //    
 //    //Create the tabBarController
@@ -180,7 +182,7 @@
 //    //    [self.window setRootViewController:tabBarController];
 //    self.window.rootViewController = tabBarController;
 //    
-}
+//}
 - (void) setUpURLConnection {
     LogMethod ();
     
@@ -191,10 +193,12 @@
     // Also, avoid synchronous network access on any thread.
     //
     static NSString *feedURLString = @"http://www.croatiafest.org/xml/event.xml";
-    NSURLRequest *festivalURLRequest =
+//    static NSString *feedURLString = @"http://www.croatiafest.org/xml/events.xml";
+
+    NSURLRequest *eventURLRequest =
     [NSURLRequest requestWithURL:[NSURL URLWithString:feedURLString] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 60.0];
     
-    self.webConnection = [[NSURLConnection alloc] initWithRequest:festivalURLRequest delegate:self];
+    self.webConnection = [[NSURLConnection alloc] initWithRequest:eventURLRequest delegate:self];
     
     // Test the validity of the connection object. The most likely reason for the connection object
     // to be nil is a malformed URL, which is a programmatic error easily detected during development.
@@ -246,13 +250,13 @@
     //
     LogMethod();
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    NSLog (@"httpResponse is %d", httpResponse.statusCode);
+    NSLog (@"httpResponse is %ld", (long)httpResponse.statusCode);
     NSLog (@"response.MIMEType is %@", response.MIMEType);
     
     if ((([httpResponse statusCode]/100) == 2) && [[response MIMEType] isEqual:@"text/xml"]) {
         
-        self.festivalData = [NSMutableData data];
-        //        self.festivalData = [[[NSMutableData alloc] init] autorelease];
+        self.eventData = [NSMutableData data];
+        //        self.eventData = [[[NSMutableData alloc] init] autorelease];
         
     } else {
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:
@@ -267,9 +271,9 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     //    LogMethod();
     
-    [festivalData appendData:data];
+    [eventData appendData:data];
     //        the following statement just shows binary data
-    //        NSLog (@"(festivalData is %@", festivalData);
+    //        NSLog (@"(eventData is %@", eventData);
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -308,15 +312,16 @@
     //    DataModel *model = [[DataModel alloc] init];
     
     
-    ParseOperation *parseOperation = [[ParseOperation alloc] initWithData: self.festivalData];
+    ParseOperation *parseOperation = [[ParseOperation alloc] initWithData: self.eventData];
+//don't think I need this
     //need to pass managedObjectContext because ParseOperation calls core data to check version number
-    parseOperation.managedObjectContext = self.managedObjectContext;
+//    parseOperation.managedObjectContext = self.managedObjectContext;
     
     [self.parseQueue addOperation:parseOperation];
     
-    // festivalData will be retained by the NSOperation until it has finished executing,
+    // eventData will be retained by the NSOperation until it has finished executing,
     // so we no longer need a reference to it in the main thread.
-    self.festivalData = nil;
+    self.eventData = nil;
 }
 #pragma mark -
 #pragma mark handle data coming from URL
@@ -344,7 +349,8 @@
     
     assert([NSThread isMainThread]);
     
-    [self distributeParsedData:[[notif userInfo] valueForKey:kFestivalResultsKey]];
+
+    [self distributeParsedData:[[notif userInfo] valueForKey:kEventResultsKey]];
     
 }
 
@@ -355,7 +361,7 @@
     
     assert([NSThread isMainThread]);
     
-    [self handleError:[[notif userInfo] valueForKey:kFestivalMsgErrorKey]];
+    [self handleError:[[notif userInfo] valueForKey:kEventMsgErrorKey]];
 }
 
 // The NSOperation "ParseOperation" calls addParsedData: via NSNotification, on the main thread
@@ -363,52 +369,101 @@
 // The batch size is set via the kSizeOfParsedBatch constant.
 //
 
-- (void)distributeParsedData:(NSDictionary *) parsedData {
+//- (void)distributeParsedData:(NSDictionary *) parsedData {
+- (void)distributeParsedData:(NSArray *) parsedData {
+
     LogMethod();
-    //    NSLog (@"parsedData dictionary is %@", parsedData);
-    
+	
+	    //    NSLog (@"parsedData dictionary is %@", parsedData);
+	InsertEvents *insertEvents = [InsertEvents alloc];
+	insertEvents.managedObjectContext = self.managedObjectContext;
+	
     if (self.resetData) {
-        [self deletePersistentStore];
+		[insertEvents removeExpiredEventsFromCoreData];
         self.resetData = NO;  //only reset Core Data the first time that data is coming in here in case it comes back in multiple batches
-        // moc is deleted and re-created so need to re-setup view controllers
-        [self setUpViewControllers];
     }
-    // read through dictionary, for each key, call method for that type of table with the dictionary of parsed data
-    NSEnumerator *enumerator = [parsedData keyEnumerator];
-    id key;
-    while ((key = [enumerator nextObject])) {
-        /* code that uses the returned key */
-        NSLog (@"key is %@", key);
-        NSArray* passedArray = [[NSArray alloc] initWithArray:[parsedData objectForKey:key]];
-        
-        if ([key isEqualToString: @"festivalActivities"]) {
-            InsertEvents *insertEvents = [InsertEvents alloc];
-            insertEvents.managedObjectContext = self.managedObjectContext;
-            [insertEvents addEventsToCoreData:passedArray forKey: @"Activities"];
-        }
 
-    }
-}
-- (void) deletePersistentStore {
-    LogMethod();
-    //     retrieve the store URL
-    NSPersistentStore *store = [self.persistentStoreCoordinator.persistentStores lastObject];
-    NSError *error = nil;
-    NSURL *storeURL = store.URL;
-    [self.persistentStoreCoordinator removePersistentStore:store error:&error];
-    
-    // Release CoreData chain
-    _managedObjectContext = nil;
-    _persistentStoreCoordinator = nil;
-    
-    //    // Delete the sqlite file
-    if ([[NSFileManager defaultManager] fileExistsAtPath:storeURL.path]) {
-        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
-    }
-    
-    //NSLog(@"Data Reset");
-}
+// Sort the array of dictionaries in eventID order
 
+	NSArray *sortedArray;
+	sortedArray = [parsedData sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *event1, NSDictionary *event2) {
+		NSString *first = [event1 valueForKey: @"id"];
+		NSString *second = [event2 valueForKey: @"id"];
+		return [first compare:second];
+	}];
+
+//
+//	NSArray *eventIDs = [[self listOfIDsAsString: parsedData] sortedArrayUsingSelector: @selector(compare:)];
+
+	//create an array of just id's to use for creating predicate for fetch (they are already sorted)
+ 	NSArray *eventIDs = [self listOfIDsAsString: sortedArray];
+
+	// create the fetch request to get all Events matching the IDs
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+	[fetchRequest setEntity:[NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext]];
+	[fetchRequest setPredicate: [NSPredicate predicateWithFormat: @"(eventId IN %@)", eventIDs]];
+
+	// Make sure the results are sorted as well.
+	[fetchRequest setSortDescriptors:
+		@[ [[NSSortDescriptor alloc] initWithKey: @"eventId" ascending:YES] ]];
+	// Execute the fetch.
+	NSError *error;
+	NSArray *eventsMatchingNewIDs = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+
+	NSLog (@"ids coming in %@", eventIDs);
+	NSLog (@"new ids to be inserted %@", eventsMatchingNewIDs);
+	
+//    // add the array of dictionaries to core data
+//
+//
+//	[insertEvents addEventsToCoreData:parsedData];
+//	
+//	[[NSNotificationCenter defaultCenter] postNotificationName: @"dataChanged"
+//											object:self
+//											userInfo:nil];
+
+	//index i is for array eventsMatchingNewIDs - these should be added to the database
+	//index j is for array sortedArray and eventIDs array
+	int i, j;
+	for (i = 0,j = 0; i < [eventsMatchingNewIDs count]; i++) {
+		while ([eventsMatchingNewIDs objectAtIndex: i] > [eventIDs objectAtIndex: j]) {
+				j++;
+		}
+				//if event ids match then insert the new event
+		if ([eventsMatchingNewIDs objectAtIndex: i] == [eventIDs objectAtIndex: j]) {
+			[insertEvents addEventToCoreData: [sortedArray objectAtIndex: j]];
+		}
+		j++;
+	}
+	[insertEvents listEvents];
+}
+- (NSArray *) listOfIDsAsString: (NSArray *) sortedArray {
+	NSMutableArray *arrayOfIDs = [[NSMutableArray alloc] initWithCapacity: [sortedArray count]];
+	for (NSDictionary* event in sortedArray) {
+		[arrayOfIDs addObject: [event objectForKey: @"id"]];
+	}
+	return arrayOfIDs;
+		
+}
+//- (void) deletePersistentStore {
+//    LogMethod();
+//    //     retrieve the store URL
+//    NSPersistentStore *store = [self.persistentStoreCoordinator.persistentStores lastObject];
+//    NSError *error = nil;
+//    NSURL *storeURL = store.URL;
+//    [self.persistentStoreCoordinator removePersistentStore:store error:&error];
+//    
+//    // Release CoreData chain
+//    _managedObjectContext = nil;
+//    _persistentStoreCoordinator = nil;
+//    
+//    //    // Delete the sqlite file
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:storeURL.path]) {
+//        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
+//    }
+//    
+//	NSLog(@"Data Reset");
+//}
 #pragma mark -
 #pragma mark save context method
 - (void)saveContext

@@ -7,18 +7,16 @@
 //
 #import <Foundation/Foundation.h>
 
-#define TABLE_FEED_TAGS  @"event", nil
-
-#define EVENT_FEED_TAGS @"event", @"hour", @"minute", @"ampm", @"hour_end", @"minute_end", @"ampm_end", @"month", @"day", @"year", @"month_end", @"location", @"email", @"phone", @"link", @"link_name", @"description", @"html", nil
+#define EVENT_FEED_TAGS @"id", @"name", @"hour", @"minute", @"ampm", @"hour_end", @"minute_end", @"ampm_end", @"month", @"day", @"year", @"month_end", @"location", @"email", @"phone", @"link", @"link_name", @"description", @"html", nil
 
 
-extern NSString *kAddFestivalNotif;
-extern NSString *kFestivalResultsKey;
+extern NSString *kAddEventNotif;
+extern NSString *kEventResultsKey;
 
-extern NSString *kFestivalErrorNotif;
-extern NSString *kFestivalMsgErrorKey;
+extern NSString *kEventErrorNotif;
+extern NSString *kEventMsgErrorKey;
 
-@class VersionController;
+//@class VersionController;
 
 @interface ParseOperation : NSOperation {
     
@@ -26,17 +24,19 @@ extern NSString *kFestivalMsgErrorKey;
     
     NSSet *tableItemNames;
 
+	
+
     NSMutableDictionary *tableTagsDictionary;
     NSMutableDictionary *currentItemDictionary;
     NSString *currentTableName;
     NSString *currentElementName;
-    NSMutableDictionary *parsedTablesDictionary;
+//    NSMutableDictionary *parsedFinalDictionary;
 
 
 @private
     
     // these variables are used during parsing
-    VersionController *versionController;
+//    VersionController *versionController;
 
     NSMutableArray *currentParseBatch;
     NSMutableString *currentParsedCharacterData;
@@ -50,10 +50,11 @@ extern NSString *kFestivalMsgErrorKey;
 @property (copy, readonly) NSData *parseData;
 @property (nonatomic, retain) NSMutableDictionary *tableTagsDictionary;
 @property (nonatomic, retain) NSMutableDictionary *currentItemDictionary;
-@property (nonatomic, retain) NSMutableDictionary *parsedTablesDictionary;
+@property (nonatomic, retain) NSMutableDictionary *parsedFinalDictionary;
 @property (nonatomic, retain) NSString *currentElementName;
 @property (nonatomic, retain) NSString *currentTableName;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) NSSet *eventItemNames;
 
 - (id)initWithData:(NSData *)data;
 

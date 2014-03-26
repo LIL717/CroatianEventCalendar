@@ -12,7 +12,8 @@
 
 @implementation Event
 
-@dynamic event;
+@dynamic eventId;
+@dynamic name;
 @dynamic beginDate;
 @dynamic endDate;
 @dynamic location;
@@ -20,7 +21,6 @@
 @dynamic phone;
 @dynamic link;
 @dynamic link_name;
-@dynamic description;
-@dynamic html;
+@dynamic desc;
 
 @end

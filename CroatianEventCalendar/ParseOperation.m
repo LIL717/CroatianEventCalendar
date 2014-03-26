@@ -7,22 +7,23 @@
 //
 
 #import "ParseOperation.h"
+#import "Event.h"
 
-// NSNotification name for sending Festival data back to the app delegate
-NSString *kAddFestivalNotif = @"AddFestivalNotif";
+// NSNotification name for sending event data back to the app delegate
+NSString *kAddEventNotif = @"AddEventNotif";
 
-// NSNotification userInfo key for obtaining the Festival data
-NSString *kFestivalResultsKey = @"FestivalResultsKey";
+// NSNotification userInfo key for obtaining the event data
+NSString *kEventResultsKey = @"EventResultsKey";
 
 // NSNotification name for reporting errors
-NSString *kFestivalErrorNotif = @"FestivalErrorNotif";
+NSString *kEventErrorNotif = @"EventErrorNotif";
 
 // NSNotification userInfo key for obtaining the error message
-NSString *kFestivalMsgErrorKey = @"FestivalMsgErrorKey";
+NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
 
 
 @interface ParseOperation () <NSXMLParserDelegate>
-@property (nonatomic, retain) VersionController *versionController;
+//@property (nonatomic, retain) VersionController *versionController;
 @property (nonatomic, retain) NSMutableArray *currentParseBatch;
 @property (nonatomic, retain) NSMutableString *currentParsedCharacterData;
 @end
@@ -30,13 +31,14 @@ NSString *kFestivalMsgErrorKey = @"FestivalMsgErrorKey";
 @implementation ParseOperation
 
 @synthesize parseData;
-@synthesize versionController;
+//@synthesize versionController;
 @synthesize currentParsedCharacterData;
 @synthesize currentParseBatch;
 
+@synthesize eventItemNames;
 @synthesize tableTagsDictionary;
 @synthesize currentItemDictionary;
-@synthesize parsedTablesDictionary;
+//@synthesize parsedFinalDictionary;
 @synthesize currentTableName;
 @synthesize currentElementName;
 @synthesize managedObjectContext = __managedObjectContext;
@@ -46,14 +48,14 @@ NSString *kFestivalMsgErrorKey = @"FestivalMsgErrorKey";
 - (id)initWithData:(NSData *)data
 
 {
-    LogMethod();
+//    LogMethod();
 
     if ((self = [super init])) {   
-        tableItemNames = [[NSSet alloc] initWithObjects:TABLE_FEED_TAGS]; 
-        self.tableTagsDictionary = [[NSMutableDictionary alloc] initWithCapacity: [tableItemNames count]];
-        self.parsedTablesDictionary = [[NSMutableDictionary alloc] initWithCapacity:[tableItemNames count]];
 
-        [self.tableTagsDictionary setValue:[[NSSet alloc] initWithObjects:EVENT_FEED_TAGS] forKey:@"event"];
+		//i think there is only one key = event and an array of dictionaries of events
+//        self.parsedFinalDictionary = [[NSMutableDictionary alloc] initWithCapacity:1];
+
+		self.eventItemNames = [[NSSet alloc] initWithObjects:EVENT_FEED_TAGS];
 
         parseData = [data copy];
 
@@ -61,19 +63,25 @@ NSString *kFestivalMsgErrorKey = @"FestivalMsgErrorKey";
     return self;
 }
 - (void)dealloc {
-    LogMethod();
+//    LogMethod();
 
 }
-- (void)distributeParsedData:(NSDictionary *)parsedData {
+//- (void)distributeParsedData:(NSDictionary *)parsedData {
+- (void)distributeParsedData:(NSArray *)parsedData {
+
 
 //    LogMethod();
     assert([NSThread isMainThread]);
 //    NSLog (@" parsedData %@", parsedData);
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAddFestivalNotif
+//		NSLog (@"userInfo is %@", [NSDictionary dictionaryWithObject:parsedData
+//                                                        forKey:kEventResultsKey]);
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAddEventNotif
                                                         object:self
                                                         userInfo:[NSDictionary dictionaryWithObject:parsedData
-                                                        forKey:kFestivalResultsKey]]; 
+                                                        forKey:kEventResultsKey]];
+
 }
+
 
 // the main function for this NSOperation, to start the parsing
 - (void)main {
@@ -97,13 +105,13 @@ NSString *kFestivalMsgErrorKey = @"FestivalMsgErrorKey";
     // the array and, if necessary, send it to the main thread.
     //
     if ([self.currentParseBatch count] > 0) {
-        [self.parsedTablesDictionary setValue:self.currentParseBatch forKey:self.currentTableName];
         [self performSelectorOnMainThread:@selector(distributeParsedData:)
-                               withObject:self.parsedTablesDictionary
+//                               withObject:self.parsedFinalDictionary
+                               withObject:self.currentParseBatch
                             waitUntilDone:NO];
     }
     self.currentParsedCharacterData = nil;
-    self.currentParseBatch = nil;
+//    self.currentParseBatch = nil;
     
 }
 
@@ -116,16 +124,16 @@ static const NSUInteger kMaximumNumberOfRecordsToParse = 150;
 
 // When an parsed object has been fully constructed, it must be passed to the main thread and
 // loaded into Core Data.   It is not efficient to do
-// this for every festival object - the overhead in communicating between the threads and reloading
+// this for every event object - the overhead in communicating between the threads and reloading
 // the table exceed the benefit to the user. Instead, we pass the objects in batches, sized by the
 // constant below. In your application, the optimal batch size will vary 
 // depending on the amount of data in the object and other factors, as appropriate.
 //
-static NSUInteger const kSizeOfParsedBatch = 80;
+static NSUInteger const kSizeOfParsedBatch = 90;
 
 // Reduce potential parsing errors by using string constants declared in a single place.
-static NSString * const kTableName = @"table";
-static NSString * const kColumnName = @"column";
+static NSString * const kFileName = @"xml";
+static NSString * const kEventName = @"event";
 
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
@@ -155,51 +163,30 @@ static NSString * const kColumnName = @"column";
         didAbortParsing = YES;
         [parser abortParsing];
     }
+	
+	if ([elementName isEqualToString: kFileName]) {
+	return;
+	}
 //    NSLog (@"elementName is %@", elementName);
 //    NSLog (@"attributeDict is %@", attributeDict);
+			
+//	NSLog (@" parsedTablesDictionary is %@", self.parsedFinalDictionary);
 
-    if ([elementName isEqualToString:kTableName]) {
-        
-        if ([[attributeDict valueForKey:@"name"] isEqualToString: self.currentTableName] || self.currentTableName == nil) {
-                
-            } else {
-                //if the table is a different type from the previous one, need put previous table's data into passing dictionary and init
-                //put the array in the dictionary with the type of table for the key
-                [self.parsedTablesDictionary setValue:self.currentParseBatch forKey:self.currentTableName];
-//                NSLog (@" parsedTablesDictionary is %@", self.parsedTablesDictionary);
-                
-                if ([self.currentParseBatch count] >= kSizeOfParsedBatch) {
-                    //pass the dictionary
-                    [self performSelectorOnMainThread:@selector(distributeParsedData:)
-                                           withObject:self.parsedTablesDictionary
-//                                        waitUntilDone:NO];
-                                          waitUntilDone:YES];
+	   
+	if ([elementName isEqualToString:kEventName]) {
+		self.currentItemDictionary = [[NSMutableDictionary alloc] initWithCapacity: [eventItemNames count]];
 
-                    self.currentParseBatch = [NSMutableArray array];
-                    self.parsedTablesDictionary = [[NSMutableDictionary alloc] initWithCapacity:[tableItemNames count]];
+    } else {
 
+        self.currentElementName  = elementName;
+        if ([self.eventItemNames containsObject:self.currentElementName]) {
 
-                }
-                self.currentParseBatch = [NSMutableArray array];
-            }
-        self.currentTableName = [[NSString alloc] initWithString:[attributeDict valueForKey:@"name"]];
+			// The mutable string needs to be reset to empty.
+			currentParsedCharacterData = [[NSMutableString alloc] init];
 
-        if ([tableItemNames containsObject:self.currentTableName ]) {
-            NSSet *itemNames = [[NSSet alloc] initWithSet:[self.tableTagsDictionary valueForKey:self.currentTableName]];
-            self.currentItemDictionary = [[NSMutableDictionary alloc] initWithCapacity: [itemNames count]];
-        } else self.currentTableName = nil;
-    } 
-    if ([elementName isEqualToString:kColumnName]) {
-        self.currentElementName  = [[NSString alloc] initWithString:[attributeDict valueForKey:@"name"]];
-
-        if ([[self.tableTagsDictionary valueForKey:self.currentTableName] containsObject:self.currentElementName]) {
-
-                // The mutable string needs to be reset to empty.
-                currentParsedCharacterData = [[NSMutableString alloc] init];
-
-                // For the 'column' element begin accumulating parsed character data.
-                // The contents are collected in parser:foundCharacters:.
-                accumulatingParsedCharacterData = YES;
+			// For the 'column' element begin accumulating parsed character data.
+			// The contents are collected in parser:foundCharacters:.
+			accumulatingParsedCharacterData = YES;
         }
     }
 }
@@ -210,10 +197,10 @@ static NSString * const kColumnName = @"column";
 {   
 //    LogMethod();
 
-//    NSLog (@" here is the data that is in the parsed string %@", self.currentParsedCharacterData);
+//    NSLog (@" parsed string %@", self.currentParsedCharacterData);
 //    NSLog(@"end element %@", elementName);
 
-    if ([elementName isEqualToString:kColumnName]) {
+    if (![elementName isEqualToString:kEventName]) {
 //        NSLog(@"currentElementName is %@", self.currentElementName);
 //        NSLog(@"currentParsedCharacterData is %@", self.currentParsedCharacterData);
         [self.currentItemDictionary setValue:currentParsedCharacterData forKey:self.currentElementName];
@@ -221,15 +208,23 @@ static NSString * const kColumnName = @"column";
 //        NSLog (@"currentItemDictionary is %@", self.currentItemDictionary);
 
     }
-    else if ([elementName isEqualToString:kTableName]) {
+    else if ([elementName isEqualToString:kEventName]) {
 //        NSLog (@" currentItemDictionary is %@", self.currentItemDictionary);
 
         [self.currentParseBatch addObject:self.currentItemDictionary];
 
 //        NSLog (@" currentParseBatch is %@", self.currentParseBatch);
-                
-        parsedRecordCounter++;
         
+        parsedRecordCounter++;
+		
+		if ([self.currentParseBatch count] >= kSizeOfParsedBatch) {
+			//pass the dictionary
+			[self performSelectorOnMainThread:@selector(distributeParsedData:)
+										withObject:self.currentParseBatch
+                                        waitUntilDone:YES];
+										
+			[self.currentParseBatch removeAllObjects];
+		}
     }
     // Stop accumulating parsed character data. We won't start again until specific elements begin.
     accumulatingParsedCharacterData = NO;
@@ -250,19 +245,29 @@ static NSString * const kColumnName = @"column";
 }
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
 //    LogMethod();
+		//put the array in the dictionary with the type of table for the key
+
+//		if ([self.currentParseBatch count] >= kSizeOfParsedBatch) {
+//			//pass the dictionary
+			[self performSelectorOnMainThread:@selector(distributeParsedData:)
+										withObject:self.currentParseBatch
+                                        waitUntilDone:YES];
+										
+			[self.currentParseBatch removeAllObjects];
+//		}
 }
 
 // an error occurred while parsing the Performer data,
 // post the error as an NSNotification to our app delegate.
 // 
 - (void)handleParsedDataError:(NSError *)parseError {
-    LogMethod();
+//    LogMethod();
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFestivalErrorNotif
+    [[NSNotificationCenter defaultCenter] postNotificationName:kEventErrorNotif
                                                         object:self
                                                       userInfo:[NSDictionary 
                                             dictionaryWithObject:parseError
-                                                        forKey:kFestivalMsgErrorKey]];
+                                                        forKey:kEventMsgErrorKey]];
 }
 
 // an error occurred while parsing the Performer data,
@@ -270,7 +275,7 @@ static NSString * const kColumnName = @"column";
 // (note: don't report an error if we aborted the parse due to a max limit of Performer)
 //
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
-    LogMethod();
+//    LogMethod();
 
     if ([parseError code] != NSXMLParserDelegateAbortedParseError && !didAbortParsing)
     {
