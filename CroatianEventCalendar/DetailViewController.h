@@ -12,5 +12,15 @@
 
 @property (strong, nonatomic) id detailItem;
 
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (strong, nonatomic) IBOutlet UILabel *name;
+@property (strong, nonatomic) IBOutlet UILabel *beginDate;
+@property (strong, nonatomic) IBOutlet UILabel *endDate;
+@property (strong, nonatomic) IBOutlet UITextField *location;
+@property (strong, nonatomic) IBOutlet UILabel *email;
+@property (strong, nonatomic) IBOutlet UILabel *phone;
+@property (strong, nonatomic) IBOutlet UILabel *link;
+@property (strong, nonatomic) IBOutlet UILabel *desc;
+
+
+
 @end

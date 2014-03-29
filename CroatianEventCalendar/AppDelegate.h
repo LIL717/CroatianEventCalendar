@@ -13,7 +13,6 @@
 
 extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
 
-//@interface AppDelegate : UIResponder <UIApplicationDelegate>   //this was from template
 @interface AppDelegate : NSObject <UIApplicationDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate> {
     
 @private
@@ -35,6 +34,5 @@ extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-//- (void) deletePersistentStore;
 
 @end

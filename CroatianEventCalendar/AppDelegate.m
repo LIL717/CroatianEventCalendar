@@ -44,14 +44,10 @@
 @synthesize resetData;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
-@synthesize fetchedResultsController = _fetchedResultsController;
+//@synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 static NSString * const kEvents = @"events";
-
-
-
-
 
 - (void)dealloc {
     
@@ -65,6 +61,16 @@ static NSString * const kEvents = @"events";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     LogMethod ();
+	
+	NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8];
+    shadow.shadowOffset = CGSizeMake(0, 1);
+
+	[[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       [UIColor redColor], NSForegroundColorAttributeName,
+                                                       shadow, NSShadowAttributeName,
+                                                       [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:25.0], NSFontAttributeName, nil]];
+				
 //    // Override point for customization after application launch.
 //    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 //        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
@@ -100,8 +106,6 @@ static NSString * const kEvents = @"events";
     
     self.resetData = YES; //use this bool to only reset core data once when new data is coming in
     self.eventData = nil;
-//    [self setUpViewControllers];
-//    [self.window makeKeyAndVisible];
     
     
     return YES;
@@ -134,55 +138,7 @@ static NSString * const kEvents = @"events";
     
     
 }
-//- (void) setUpViewControllers {
-//    LogMethod ();
-//    
-//    //Create the tabBarController
-//    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-//    [[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar-button-red.png"]];
-//    
-//    
-//    
-//    //Create view controllers
-//    MasterViewController *masterViewController = [[MasterViewController alloc] init];
-//    masterViewController.managedObjectContext = self.managedObjectContext;
-//    
-//    //Create navigation controller
-//    UINavigationController *navController = [[UINavigationController alloc]
-//                                             initWithRootViewController:masterViewController];
-//
-//    //Customize the look of the UINavBar for iOS5 devices
-//    if ([[UINavigationBar class]respondsToSelector:@selector(appearance)]) {
-//        
-//        //        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navigationBarPleter.png"] forBarMetrics:UIBarMetricsDefault];
-//        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"menubar-red.png"] forBarMetrics:UIBarMetricsDefault];
-//        [[UINavigationBar  appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-//                                                              //                                                 [UIFont fontWithName:@"Chalkduster" size:20.0f], UITextAttributeFont,
-//                                                              [UIColor whiteColor], UITextAttributeTextColor,
-//                                                              [UIColor grayColor], UITextAttributeTextShadowColor,
-//                                                              [NSValue valueWithUIOffset:UIOffsetMake(0.0f, 1.0f)], UITextAttributeTextShadowOffset,
-//                                                              nil]];
-//        //        [[UINavigationBar appearance] setTitleVerticalPositionAdjustment:-10.0f forBarMetrics:(UIBarMetrics)UIBarMetricsDefault];
-//        UIImage *backButton = [[UIImage imageNamed:@"back-red.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 14, 0, 4)];
-//        
-//        [[UIBarButtonItem appearance] setBackButtonBackgroundImage:backButton forState:UIControlStateNormal
-//                                                        barMetrics:UIBarMetricsDefault];
-//        //        [[UIBarButtonItem appearance] setTintColor:[UIColor redColor]];
-//    }
-//    
-//    
-//    //Make an array containing the two view controllers
-//    NSArray *viewControllers = [NSArray arrayWithObjects: navController, nil];
-//    
-//    
-//    //Attach them to the tab bar controller
-//    [tabBarController setViewControllers:viewControllers];
-//    
-//    //Set tabBar Controller as rootViewController of window
-//    //    [self.window setRootViewController:tabBarController];
-//    self.window.rootViewController = tabBarController;
-//    
-//}
+
 - (void) setUpURLConnection {
     LogMethod ();
     
@@ -193,7 +149,6 @@ static NSString * const kEvents = @"events";
     // Also, avoid synchronous network access on any thread.
     //
     static NSString *feedURLString = @"http://www.croatiafest.org/xml/event.xml";
-//    static NSString *feedURLString = @"http://www.croatiafest.org/xml/events.xml";
 
     NSURLRequest *eventURLRequest =
     [NSURLRequest requestWithURL:[NSURL URLWithString:feedURLString] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 60.0];
@@ -348,8 +303,6 @@ static NSString * const kEvents = @"events";
     LogMethod();
     
     assert([NSThread isMainThread]);
-    
-
     [self distributeParsedData:[[notif userInfo] valueForKey:kEventResultsKey]];
     
 }
@@ -369,101 +322,23 @@ static NSString * const kEvents = @"events";
 // The batch size is set via the kSizeOfParsedBatch constant.
 //
 
-//- (void)distributeParsedData:(NSDictionary *) parsedData {
 - (void)distributeParsedData:(NSArray *) parsedData {
 
     LogMethod();
 	
-	    //    NSLog (@"parsedData dictionary is %@", parsedData);
 	InsertEvents *insertEvents = [InsertEvents alloc];
 	insertEvents.managedObjectContext = self.managedObjectContext;
 	
     if (self.resetData) {
-		[insertEvents removeExpiredEventsFromCoreData];
+		[insertEvents removeAllEventsFromCoreData];
         self.resetData = NO;  //only reset Core Data the first time that data is coming in here in case it comes back in multiple batches
     }
 
-// Sort the array of dictionaries in eventID order
+	[insertEvents addEventsToCoreData:parsedData];
+//		[insertEvents listEvents];
 
-	NSArray *sortedArray;
-	sortedArray = [parsedData sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *event1, NSDictionary *event2) {
-		NSString *first = [event1 valueForKey: @"id"];
-		NSString *second = [event2 valueForKey: @"id"];
-		return [first compare:second];
-	}];
-
-//
-//	NSArray *eventIDs = [[self listOfIDsAsString: parsedData] sortedArrayUsingSelector: @selector(compare:)];
-
-	//create an array of just id's to use for creating predicate for fetch (they are already sorted)
- 	NSArray *eventIDs = [self listOfIDsAsString: sortedArray];
-
-	// create the fetch request to get all Events matching the IDs
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	[fetchRequest setEntity:[NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext]];
-	[fetchRequest setPredicate: [NSPredicate predicateWithFormat: @"(eventId IN %@)", eventIDs]];
-
-	// Make sure the results are sorted as well.
-	[fetchRequest setSortDescriptors:
-		@[ [[NSSortDescriptor alloc] initWithKey: @"eventId" ascending:YES] ]];
-	// Execute the fetch.
-	NSError *error;
-	NSArray *eventsMatchingNewIDs = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-
-	NSLog (@"ids coming in %@", eventIDs);
-	NSLog (@"new ids to be inserted %@", eventsMatchingNewIDs);
-	
-//    // add the array of dictionaries to core data
-//
-//
-//	[insertEvents addEventsToCoreData:parsedData];
-//	
-//	[[NSNotificationCenter defaultCenter] postNotificationName: @"dataChanged"
-//											object:self
-//											userInfo:nil];
-
-	//index i is for array eventsMatchingNewIDs - these should be added to the database
-	//index j is for array sortedArray and eventIDs array
-	int i, j;
-	for (i = 0,j = 0; i < [eventsMatchingNewIDs count]; i++) {
-		while ([eventsMatchingNewIDs objectAtIndex: i] > [eventIDs objectAtIndex: j]) {
-				j++;
-		}
-				//if event ids match then insert the new event
-		if ([eventsMatchingNewIDs objectAtIndex: i] == [eventIDs objectAtIndex: j]) {
-			[insertEvents addEventToCoreData: [sortedArray objectAtIndex: j]];
-		}
-		j++;
-	}
-	[insertEvents listEvents];
 }
-- (NSArray *) listOfIDsAsString: (NSArray *) sortedArray {
-	NSMutableArray *arrayOfIDs = [[NSMutableArray alloc] initWithCapacity: [sortedArray count]];
-	for (NSDictionary* event in sortedArray) {
-		[arrayOfIDs addObject: [event objectForKey: @"id"]];
-	}
-	return arrayOfIDs;
-		
-}
-//- (void) deletePersistentStore {
-//    LogMethod();
-//    //     retrieve the store URL
-//    NSPersistentStore *store = [self.persistentStoreCoordinator.persistentStores lastObject];
-//    NSError *error = nil;
-//    NSURL *storeURL = store.URL;
-//    [self.persistentStoreCoordinator removePersistentStore:store error:&error];
-//    
-//    // Release CoreData chain
-//    _managedObjectContext = nil;
-//    _persistentStoreCoordinator = nil;
-//    
-//    //    // Delete the sqlite file
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:storeURL.path]) {
-//        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
-//    }
-//    
-//	NSLog(@"Data Reset");
-//}
+
 #pragma mark -
 #pragma mark save context method
 - (void)saveContext

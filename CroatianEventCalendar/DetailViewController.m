@@ -36,7 +36,15 @@
     // Update the user interface for the detail item.
 
     if (self.detailItem) {
-        self.detailDescriptionLabel.text = [[self.detailItem valueForKey:@"name"] description];
+        self.name.text = [[self.detailItem valueForKey:@"name"] description];
+		self.location.text = [[self.detailItem valueForKey:@"location"] description];
+		self.beginDate.text = [[self.detailItem valueForKey:@"beginDate"] description];
+		self.endDate.text = [[self.detailItem valueForKey:@"endDate"] description];
+		self.email.text = [[self.detailItem valueForKey:@"email"] description];
+		self.phone.text = [[self.detailItem valueForKey:@"phone"] description];
+		self.link.text = [[self.detailItem valueForKey:@"link_name"] description];
+		self.desc.text = [[self.detailItem valueForKey:@"desc"] description];
+
     }
 }
 
@@ -44,6 +52,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+	self.navigationController.navigationBar.translucent = YES;
     [self configureView];
 }
 

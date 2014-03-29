@@ -7,8 +7,6 @@
 //
 
 #import "Event.h"
-//#import "Schedule.h"
-
 
 @implementation Event
 

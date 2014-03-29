@@ -17,23 +17,17 @@
 
 - (void)dealloc {
     
-
-
 }    
-- (void)addEventToCoreData:(Event *)newEvent {
+- (void)addEventsToCoreData:(NSArray *) events {
     //LogMethod();
     //this is an array of dictionaries
     
     NSError *error = nil;
     // insert the events into Core Data
-//    for (id newEvent in events) {
+    for (id newEvent in events) {
 
-        Event *event = [NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
-
-		event.eventId = [NSNumber numberWithInteger:[[newEvent valueForKey: @"id"] intValue]];
-        event.name = [newEvent valueForKey: @"name"];
-        
-        NSDateComponents *comps = [[NSDateComponents alloc] init];
+//if event is older than yesterday, don't add it
+		NSDateComponents *comps = [[NSDateComponents alloc] init];
         [comps setYear:[[newEvent valueForKey: @"year"] intValue]];
         [comps setMonth:[[newEvent valueForKey: @"month"] intValue]];
         [comps setDay:[[newEvent valueForKey: @"day"] intValue]];
@@ -48,7 +42,18 @@
         
         [comps setMinute:[[newEvent valueForKey: @"minute"] intValue]];
         NSDate *date = [[NSCalendar currentCalendar] dateFromComponents:comps];
-        event.beginDate = date;
+		
+		if ([self dateIsOlderThanYesterday: date]) {
+			continue;
+		}
+		
+        Event *event = [NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+
+		event.eventId = [NSNumber numberWithInteger:[[newEvent valueForKey: @"id"] intValue]];
+        event.name = [newEvent valueForKey: @"name"];
+        
+		event.beginDate = date;
+
         
         comps = [[NSDateComponents alloc] init];
         [comps setYear:[[newEvent valueForKey: @"year_end"] intValue]];
@@ -79,15 +84,28 @@
             NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
         }
         
-//    }
-    
+    }
 
 }
+- (BOOL) dateIsOlderThanYesterday:(NSDate *)checkEventDate
+{
+    NSDate* enddate = checkEventDate;
+    NSDate* yesterday = [NSDate dateWithTimeIntervalSinceNow:(-86400)];
+    NSTimeInterval distanceBetweenDates = [enddate timeIntervalSinceDate:yesterday];
+    double secondsInMinute = 60;
+    NSInteger secondsBetweenDates = distanceBetweenDates / secondsInMinute;
+
+    if (secondsBetweenDates == 0)
+        return YES;
+    else if (secondsBetweenDates < 0)
+        return YES;
+    else
+        return NO;
+}
+
 - (void) listEvents {
-// Test listing all Events from the store
-	LogMethod();
+//	LogMethod();
 //        NSLog(@"***************listEvents**********");
-//        NSSet *set=[self.event eventTimes];
 
 		NSError *error = nil;
 
@@ -100,30 +118,16 @@
 
         for (Event *event in fetchedObjects) {
 
-			NSLog (@"Event ID %@", event.eventId);
-            NSLog(@"Name: %@", event.name);
-            NSLog(@" desc %@", event.desc);
-            NSLog(@" beginDate %@", event.beginDate);
-            //        NSArray *timesArray = [performer.performanceTimes allObjects];
-//            for (Schedule *schedule in set) {
-//                NSLog(@"Begin Time: %@", schedule.beginTime);
-//            }
+			NSLog (@"Event %@ %@ %@", event.eventId, event.name, event.beginDate);
     }
-// end test
 }
 
-- (void)removeExpiredEventsFromCoreData {
+- (void)removeAllEventsFromCoreData {
 //    LogMethod();
     
 //select all objects in the Events table
     NSFetchRequest * fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext]];
-//    [itemsToDelete setIncludesPropertyValues:NO]; //only fetch the managedObjectID
-	// Set up predicate here
-	
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"beginDate < %@", [NSDate dateWithTimeIntervalSinceNow:(-86400)]];
-
-	[fetchRequest setPredicate:predicate];
     
     NSError * error = nil;
     NSArray * itemsToDelete = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];

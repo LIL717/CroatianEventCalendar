@@ -23,7 +23,6 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
 
 
 @interface ParseOperation () <NSXMLParserDelegate>
-//@property (nonatomic, retain) VersionController *versionController;
 @property (nonatomic, retain) NSMutableArray *currentParseBatch;
 @property (nonatomic, retain) NSMutableString *currentParsedCharacterData;
 @end
@@ -31,19 +30,15 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
 @implementation ParseOperation
 
 @synthesize parseData;
-//@synthesize versionController;
 @synthesize currentParsedCharacterData;
 @synthesize currentParseBatch;
 
 @synthesize eventItemNames;
 @synthesize tableTagsDictionary;
 @synthesize currentItemDictionary;
-//@synthesize parsedFinalDictionary;
 @synthesize currentTableName;
 @synthesize currentElementName;
 @synthesize managedObjectContext = __managedObjectContext;
-
-
 
 - (id)initWithData:(NSData *)data
 
@@ -73,7 +68,7 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
 //    LogMethod();
     assert([NSThread isMainThread]);
 //    NSLog (@" parsedData %@", parsedData);
-//		NSLog (@"userInfo is %@", [NSDictionary dictionaryWithObject:parsedData
+//    NSLog (@"userInfo is %@", [NSDictionary dictionaryWithObject:parsedData
 //                                                        forKey:kEventResultsKey]);
     [[NSNotificationCenter defaultCenter] postNotificationName:kAddEventNotif
                                                         object:self
@@ -111,7 +106,6 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
                             waitUntilDone:NO];
     }
     self.currentParsedCharacterData = nil;
-//    self.currentParseBatch = nil;
     
 }
 

@@ -15,9 +15,9 @@
 @property (nonatomic, retain) Event *event;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
-- (void)addEventToCoreData:(NSArray *)events;
+- (void)addEventsToCoreData:(NSArray *)events;
 - (void) listEvents;
-- (void)removeExpiredEventsFromCoreData;
+- (void)removeAllEventsFromCoreData;
 
 
 @end

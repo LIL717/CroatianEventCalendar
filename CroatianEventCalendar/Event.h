@@ -24,8 +24,4 @@
 
 @interface Event (CoreDataGeneratedAccessors)
 
-//- (void)addEventTimeObject:(Schedule *)value;
-//- (void)removeEventTimeObject:(Schedule *)value;
-//- (void)addEventTime:(NSSet *)values;
-//- (void)removeEventTime:(NSSet *)values;
 @end

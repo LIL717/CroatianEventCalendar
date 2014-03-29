@@ -10,6 +10,8 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
+#import "InsertEvents.h"
+#import "Event.h"
 
 
 @interface MasterViewController ()
@@ -17,6 +19,7 @@
 @end
 
 @implementation MasterViewController
+@synthesize fetchedResultsController = _fetchedResultsController;
 
 - (void)awakeFromNib
 {
@@ -33,27 +36,31 @@
 	
 	self.appDelegate = (id) [[UIApplication sharedApplication] delegate];
     self.managedObjectContext = [self.appDelegate managedObjectContext];
+
 	// Do any additional setup after loading the view, typically from a nib.
 
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
-	    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dataChanged)
-                                                 name:@"dataChanged"
-                                               object:nil];
+	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"CalendarBackgroundImage.png"]];
+	
+//	InsertEvents *insertEvents = [InsertEvents alloc];
+//	insertEvents.managedObjectContext = self.managedObjectContext;
+//	
+//	[insertEvents listEvents];
+
+    NSError *error;
+	if (![[self fetchedResultsController] performFetch:&error]) {
+		// Update to handle the error appropriately.
+		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		exit(-1);  // Fail
+	}
+	
 }
-// Our NSNotification callback data updating Core Data
-//
-- (void)dataChanged {
-    LogMethod();
-    [self.tableView reloadData];
-    
-}
+
 - (void)dealloc {
     
     LogMethod();
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dataChanged" object:nil];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -63,15 +70,10 @@
 
 #pragma mark - Table View
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-	NSLog (@"section Count %lu", (unsigned long)[[self.fetchedResultsController sections] count]);
-    return [[self.fetchedResultsController sections] count];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+- (NSInteger)tableView:(UITableView *)tableView
+    numberOfRowsInSection:(NSInteger)section {
+    id  sectionInfo =
+	[[_fetchedResultsController sections] objectAtIndex:section];
 	NSLog (@"row in section %lu", (unsigned long) [sectionInfo numberOfObjects]);
     return [sectionInfo numberOfObjects];
 }
@@ -80,9 +82,36 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     [self configureCell:cell atIndexPath:indexPath];
+
     return cell;
 }
 
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    Event *event = [_fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = [event valueForKey:@"name"];
+	
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"MM/dd/yyyy"];
+
+	NSDateFormatter *timeFormat = [[NSDateFormatter alloc] init];
+	[timeFormat setDateFormat:@"hh:mm"];
+
+	NSString *theDate = [dateFormat stringFromDate:[event valueForKey:@"beginDate"]];
+	
+	NSString *theTime = [timeFormat stringFromDate: [event valueForKey:@"beginDate"]];
+	
+	//if no time was entered display as blank
+	unsigned unitFlags = NSCalendarUnitHour  | NSCalendarUnitMinute;
+	NSDateComponents *comps = [[NSCalendar currentCalendar] components:unitFlags fromDate:[event valueForKey: @"beginDate"]];
+	if (comps.hour == 0 && comps.minute == 0) {
+		theTime = @"";
+	}
+	
+	cell.detailTextLabel.text = [NSString stringWithFormat: @"%@ %@", theDate, theTime];
+	
+	NSLog (@"textLabel %@, detailLabel %@", cell.textLabel.text, cell.detailTextLabel.text);
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -103,49 +132,87 @@
 
 #pragma mark - Fetched results controller
 
-- (NSFetchedResultsController *)fetchedResultsController
-{
+- (NSFetchedResultsController *)fetchedResultsController {
+ 
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
-    
+ 
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription
+        entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
-    
-    // Set the batch size to a suitable number.
+ 
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc]
+        initWithKey:@"beginDate" ascending:YES];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
+ 
     [fetchRequest setFetchBatchSize:20];
-    
-    // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"beginDate" ascending:NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    
-    [fetchRequest setSortDescriptors:sortDescriptors];
-//    [fetchRequest setSortDescriptors:nil];
-
-    
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
-    aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
-    
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
-	     // Replace this implementation with code to handle the error appropriately.
-	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-    
+ 
+    NSFetchedResultsController *theFetchedResultsController =
+        [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+            managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil
+            cacheName:@"Root"];
+    self.fetchedResultsController = theFetchedResultsController;
+    _fetchedResultsController.delegate = self;
+ 
     return _fetchedResultsController;
+ 
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[object valueForKey:@"name"] description];
-}
 
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
+    [self.tableView beginUpdates];
+}
+ 
+ 
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+ 
+    UITableView *tableView = self.tableView;
+ 
+    switch(type) {
+ 
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+ 
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+ 
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            break;
+ 
+        case NSFetchedResultsChangeMove:
+           [tableView deleteRowsAtIndexPaths:[NSArray
+arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+           [tableView insertRowsAtIndexPaths:[NSArray
+arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+           break;
+    }
+}
+ 
+ 
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id )sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+ 
+    switch(type) {
+ 
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+ 
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+ 
+ 
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
+    [self.tableView endUpdates];
+}
 @end

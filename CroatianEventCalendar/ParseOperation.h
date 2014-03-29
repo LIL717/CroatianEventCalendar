@@ -21,26 +21,18 @@ extern NSString *kEventMsgErrorKey;
 @interface ParseOperation : NSOperation {
     
     NSData *parseData;
-    
     NSSet *tableItemNames;
-
-	
 
     NSMutableDictionary *tableTagsDictionary;
     NSMutableDictionary *currentItemDictionary;
     NSString *currentTableName;
     NSString *currentElementName;
-//    NSMutableDictionary *parsedFinalDictionary;
-
 
 @private
     
     // these variables are used during parsing
-//    VersionController *versionController;
-
     NSMutableArray *currentParseBatch;
     NSMutableString *currentParsedCharacterData;
-    
     
     BOOL accumulatingParsedCharacterData;
     BOOL didAbortParsing;
