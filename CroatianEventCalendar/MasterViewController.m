@@ -74,7 +74,7 @@
     numberOfRowsInSection:(NSInteger)section {
     id  sectionInfo =
 	[[_fetchedResultsController sections] objectAtIndex:section];
-	NSLog (@"row in section %lu", (unsigned long) [sectionInfo numberOfObjects]);
+//	NSLog (@"row in section %lu", (unsigned long) [sectionInfo numberOfObjects]);
     return [sectionInfo numberOfObjects];
 }
 
@@ -92,10 +92,10 @@
     cell.textLabel.text = [event valueForKey:@"name"];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"MM/dd/yyyy"];
+	[dateFormat setDateStyle: NSDateFormatterLongStyle];
 
 	NSDateFormatter *timeFormat = [[NSDateFormatter alloc] init];
-	[timeFormat setDateFormat:@"hh:mm"];
+	[timeFormat setDateFormat:@"h:mm a"];
 
 	NSString *theDate = [dateFormat stringFromDate:[event valueForKey:@"beginDate"]];
 	
@@ -108,9 +108,9 @@
 		theTime = @"";
 	}
 	
-	cell.detailTextLabel.text = [NSString stringWithFormat: @"%@ %@", theDate, theTime];
+	cell.detailTextLabel.text = [NSString stringWithFormat: @"%@  %@", theDate, theTime];
 	
-	NSLog (@"textLabel %@, detailLabel %@", cell.textLabel.text, cell.detailTextLabel.text);
+//	NSLog (@"textLabel %@, detailLabel %@", cell.textLabel.text, cell.detailTextLabel.text);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Lori Hill. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "MasterViewController.h"

@@ -54,12 +54,13 @@
         
 		event.beginDate = date;
 
-        
         comps = [[NSDateComponents alloc] init];
         [comps setYear:[[newEvent valueForKey: @"year_end"] intValue]];
         [comps setMonth:[[newEvent valueForKey: @"month_end"] intValue]];
         [comps setDay:[[newEvent valueForKey: @"day_end"] intValue]];
         
+//		NSLog (@"incoming end date values %i %i %i", [[newEvent valueForKey: @"year_end"] intValue], [[newEvent valueForKey: @"month_end"] intValue], [[newEvent valueForKey: @"day_end"] intValue]);
+		
         hour = [[newEvent valueForKey: @"hour_end"] intValue];
         if ([[newEvent valueForKey: @"ampm_end"] isEqualToString: @"PM"]) {
             if (hour != 12) {
@@ -67,11 +68,12 @@
             }
         }
         [comps setHour: hour];
-        
         [comps setMinute:[[newEvent valueForKey: @"minute_end"] intValue]];
         
         date = [[NSCalendar currentCalendar] dateFromComponents:comps];
         event.endDate = date;
+		
+//		NSLog(@" --------------> endDate is %@", event.endDate);
         
         event.location = [newEvent valueForKey: @"location"];
         event.email = [newEvent valueForKey: @"email"];
