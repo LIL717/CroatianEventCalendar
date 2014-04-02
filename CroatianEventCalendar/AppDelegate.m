@@ -12,6 +12,7 @@
 #import "MasterViewController.h"
 #import "ParseOperation.h"
 #import "InsertEvents.h"
+#import "Event.h"
 
 
 // this framework was imported so we could use the kCFURLErrorNotConnectedToInternet error code
@@ -25,11 +26,13 @@
 @property (nonatomic, retain) NSURLConnection *webConnection;
 @property (nonatomic, retain) NSMutableData *eventData;    // the data returned from the NSURLConnection
 @property (nonatomic, retain) NSOperationQueue *parseQueue;   // the queue that manages our NSOperation for parsing event data
-@property (nonatomic, assign) BOOL resetData;
+@property (nonatomic, assign) BOOL firstTimeThru;
+@property (nonatomic, assign) BOOL doneParsing;
+@property (nonatomic, retain) NSMutableArray *arrayOfCoreDataEvents;
 
 //- (void) setUpViewControllers;
 - (void) setUpURLConnection;
-- (void) distributeParsedData:(NSDictionary *) parsedData;
+- (void) distributeParsedData:(NSArray *) parsedData;
 - (void) handleError:(NSError *)error;
 @end
 
@@ -41,7 +44,9 @@
 @synthesize webConnection;
 @synthesize eventData;
 @synthesize parseQueue;
-@synthesize resetData;
+@synthesize firstTimeThru;
+@synthesize doneParsing;
+@synthesize arrayOfCoreDataEvents;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 //@synthesize fetchedResultsController = _fetchedResultsController;
@@ -55,6 +60,8 @@ static NSString * const kEvents = @"events";
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddEventNotif object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kEventErrorNotif object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:kDoneParsingNotif object:nil];
+
 }
 
 
@@ -103,8 +110,13 @@ static NSString * const kEvents = @"events";
                                              selector:@selector(parsedDataError:)
                                                  name:kEventErrorNotif
                                                object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(parsingComplete:)
+                                                 name:kDoneParsingNotif
+                                               object:nil];
     
-    self.resetData = YES; //use this bool to only reset core data once when new data is coming in
+    self.firstTimeThru = YES; //use this bool to get array of what is in core data once when new data is coming in
+	self.doneParsing = NO; //gets set when the last batch of data is passed
     self.eventData = nil;
     
     
@@ -132,9 +144,10 @@ static NSString * const kEvents = @"events";
     //    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     //#endif
     
-    [self setUpURLConnection];
-    self.resetData = YES; //use this bool to only reset core data once when new data is coming in
-    self.eventData = nil;
+//    [self setUpURLConnection];
+//    self.firstTimeThru = YES; //use this bool to only reset core data once when new data is coming in
+//	self.doneParsing = NO;
+//    self.eventData = nil;
     
     
 }
@@ -321,7 +334,14 @@ static NSString * const kEvents = @"events";
 // which in turn calls this method, with batches of parsed objects.
 // The batch size is set via the kSizeOfParsedBatch constant.
 //
-
+// Our NSNotification callback from the running NSOperation to add the parsed data
+//
+- (void)parsingComplete:(NSNotification *)notif {
+    LogMethod();
+    
+    doneParsing = YES;
+    
+}
 - (void)distributeParsedData:(NSArray *) parsedData {
 
     LogMethod();
@@ -329,16 +349,87 @@ static NSString * const kEvents = @"events";
 	InsertEvents *insertEvents = [InsertEvents alloc];
 	insertEvents.managedObjectContext = self.managedObjectContext;
 	
-    if (self.resetData) {
-		[insertEvents removeAllEventsFromCoreData];
-        self.resetData = NO;  //only reset Core Data the first time that data is coming in here in case it comes back in multiple batches
+    if (self.firstTimeThru) {
+		self.arrayOfCoreDataEvents = [[NSMutableArray alloc] initWithArray: [insertEvents arrayOfEvents]];
+		for (Event *event in arrayOfCoreDataEvents) {
+
+			NSLog (@"Event %@ %@ %@", event.eventId, event.name, event.beginDate);
+		}
+//		[insertEvents removeAllEventsFromCoreData];
+        self.firstTimeThru = NO;  //only reset Core Data the first time that data is coming in here in case it comes back in multiple batches
     }
+	// check if core data is empty, just add all events at once
+	if ([arrayOfCoreDataEvents count] == 0) {
+		// add the whole array of dictionaries to core data because its the first time
+		[insertEvents addEventsToCoreData:parsedData];
+		return;
+	}
+	
+	// Sort the array of dictionaries in eventID order
+	NSArray *incomingEventsArray;
+	incomingEventsArray = [parsedData sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *event1, NSDictionary *event2) {
+		NSNumber *first = [NSNumber numberWithInt:[[event1 valueForKey: @"id"] intValue]];
+		NSNumber *second = [NSNumber numberWithInt:[[event2 valueForKey: @"id"] intValue]];
+		return [first compare:second];
+	}];
 
-	[insertEvents addEventsToCoreData:parsedData];
-//		[insertEvents listEvents];
+	//
+	NSArray *incomingEventIds = [self listOfIDsAsString: incomingEventsArray];
 
+	NSLog (@"ids coming in %@", incomingEventIds);
+
+	//index i is for array of incoming events (incomingEventsArray and incomingEventIds
+	//index j is for array of events currently in CoreData (arrayOfCoreDataEvents)
+	int i, j;
+	for (i = 0,j = 0; i < [incomingEventIds count]; i++) {
+	
+	
+		NSNumber *incomingId = [NSNumber numberWithInt: [[incomingEventIds objectAtIndex: i] intValue]];
+		NSNumber *coreDataId = [NSNumber numberWithInt: [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue]];
+
+//		NSLog (@"incomingEventId is %@", incomingId);
+//		NSLog (@"coreDataEventId is %@", coreDataId);
+		
+		while (incomingId.intValue > coreDataId.intValue) {
+				//if there are more objects in the arrayOfCoreDataEvents then bump up
+				if ((j + 1) < [arrayOfCoreDataEvents count]) {
+					j++;
+					coreDataId = [NSNumber numberWithInt: [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue]];
+				} else {
+					//entry is not already in core data so add it - this is a new id higher than any in core data
+					[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
+					break;
+				}
+
+		}
+		//if event ids match then insert the new event
+		if (incomingId.intValue < coreDataId.intValue) {
+			//entry is not already in core data so add it
+			[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
+		} else if (incomingId.intValue == coreDataId.intValue) {
+			[insertEvents updateEventInCoreData: [incomingEventsArray objectAtIndex: i]];
+			[arrayOfCoreDataEvents removeObjectAtIndex: j];
+			//not sure whether to increment j or if it should stay where it is because next object becomes current
+		}
+	}
+
+	
+	if (doneParsing) {
+	//delete the events that are in core data that were not present in incomingEvents (what is left in array)
+		[insertEvents removeEventsFromCoreData: arrayOfCoreDataEvents];
+	}
+	
+	[insertEvents listEvents];
 }
 
+- (NSArray *) listOfIDsAsString: (NSArray *) sortedArray {
+	NSMutableArray *arrayOfIDs = [[NSMutableArray alloc] initWithCapacity: [sortedArray count]];
+	for (NSDictionary* event in sortedArray) {
+		[arrayOfIDs addObject: [event objectForKey: @"id"]];
+	}
+	return arrayOfIDs;
+		
+}
 #pragma mark -
 #pragma mark save context method
 - (void)saveContext

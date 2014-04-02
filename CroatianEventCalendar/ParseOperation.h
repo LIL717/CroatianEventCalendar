@@ -12,6 +12,7 @@
 
 extern NSString *kAddEventNotif;
 extern NSString *kEventResultsKey;
+extern NSString *kDoneParsingNotif;
 
 extern NSString *kEventErrorNotif;
 extern NSString *kEventMsgErrorKey;

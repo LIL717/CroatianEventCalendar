@@ -15,6 +15,9 @@ NSString *kAddEventNotif = @"AddEventNotif";
 // NSNotification userInfo key for obtaining the event data
 NSString *kEventResultsKey = @"EventResultsKey";
 
+// NSNotification name for notifying app delegate when parsing has ended
+NSString *kDoneParsingNotif = @"DoneParsingNotif";
+
 // NSNotification name for reporting errors
 NSString *kEventErrorNotif = @"EventErrorNotif";
 
@@ -77,7 +80,6 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
 
 }
 
-
 // the main function for this NSOperation, to start the parsing
 - (void)main {
 //    LogMethod();
@@ -103,7 +105,8 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
         [self performSelectorOnMainThread:@selector(distributeParsedData:)
 //                               withObject:self.parsedFinalDictionary
                                withObject:self.currentParseBatch
-                            waitUntilDone:NO];
+                            waitUntilDone:YES];
+							
     }
     self.currentParsedCharacterData = nil;
     
@@ -123,7 +126,7 @@ static const NSUInteger kMaximumNumberOfRecordsToParse = 150;
 // constant below. In your application, the optimal batch size will vary 
 // depending on the amount of data in the object and other factors, as appropriate.
 //
-static NSUInteger const kSizeOfParsedBatch = 90;
+static NSUInteger const kSizeOfParsedBatch = 40;
 
 // Reduce potential parsing errors by using string constants declared in a single place.
 static NSString * const kFileName = @"xml";
@@ -243,11 +246,16 @@ static NSString * const kEventName = @"event";
 
 //		if ([self.currentParseBatch count] >= kSizeOfParsedBatch) {
 //			//pass the dictionary
+			[[NSNotificationCenter defaultCenter] postNotificationName:kDoneParsingNotif
+                                                        object:self
+                                                        ];
 			[self performSelectorOnMainThread:@selector(distributeParsedData:)
 										withObject:self.currentParseBatch
                                         waitUntilDone:YES];
 										
 			[self.currentParseBatch removeAllObjects];
+			
+
 //		}
 }
 

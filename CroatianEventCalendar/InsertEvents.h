@@ -16,8 +16,13 @@
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 - (void)addEventsToCoreData:(NSArray *)events;
+- (void)addEventToCoreData:(NSDictionary *)newEvent;
+- (void)updateEventInCoreData:(NSDictionary *) newEvent;
 - (void) listEvents;
+- (NSArray *) arrayOfEvents;
 - (void)removeAllEventsFromCoreData;
+- (void)removeEventsFromCoreData: (NSArray *) events;
+
 
 
 @end
