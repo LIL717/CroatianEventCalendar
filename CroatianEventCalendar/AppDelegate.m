@@ -13,6 +13,8 @@
 #import "ParseOperation.h"
 #import "InsertEvents.h"
 #import "Event.h"
+#import "SparkInspector.h"
+
 
 
 // this framework was imported so we could use the kCFURLErrorNotConnectedToInternet error code
@@ -99,7 +101,10 @@ static NSString * const kEvents = @"events";
     //#ifdef TESTING
     //    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     //#endif
-    
+    #define TESTING 1
+	#ifdef TESTING
+		[SparkInspector enableObservation];
+	#endif
     [self setUpURLConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -383,9 +388,17 @@ static NSString * const kEvents = @"events";
 	int i, j;
 	for (i = 0,j = 0; i < [incomingEventIds count]; i++) {
 	
-	
+		NSNumber *coreDataId;
 		NSNumber *incomingId = [NSNumber numberWithInt: [[incomingEventIds objectAtIndex: i] intValue]];
-		NSNumber *coreDataId = [NSNumber numberWithInt: [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue]];
+		//if there aren't any events left in the arrayOfCoreDataEvents then just add the incoming event
+		if ([arrayOfCoreDataEvents count] > 0) {
+			coreDataId = [NSNumber numberWithInt: [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue]];
+		} else {
+			[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
+			break;
+		}
+//		NSNumber *coreDataId = [(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId];
+
 
 //		NSLog (@"incomingEventId is %@", incomingId);
 //		NSLog (@"coreDataEventId is %@", coreDataId);

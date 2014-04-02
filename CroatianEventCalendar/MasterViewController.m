@@ -148,6 +148,12 @@
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
  
     [fetchRequest setFetchBatchSize:20];
+	
+	//only show events that are from yesterday on (so that an ongoing event still appears)
+	NSDate *yesterdaysDate = [NSDate dateWithTimeIntervalSinceNow: -86400];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat: @"beginDate > %@", yesterdaysDate];
+	
+	[fetchRequest setPredicate:predicate];
  
     NSFetchedResultsController *theFetchedResultsController =
         [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
