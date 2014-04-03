@@ -6,16 +6,11 @@
 //  Copyright (c) 2013 Lori Hill. All rights reserved.
 //
 
-
 #import "AppDelegate.h"
-#import "DetailViewController.h"
-#import "MasterViewController.h"
 #import "ParseOperation.h"
-#import "InsertEvents.h"
+#import "EventsInCoreData.h"
 #import "Event.h"
 #import "SparkInspector.h"
-
-
 
 // this framework was imported so we could use the kCFURLErrorNotConnectedToInternet error code
 #import <CFNetwork/CFNetwork.h>
@@ -32,15 +27,12 @@
 @property (nonatomic, assign) BOOL doneParsing;
 @property (nonatomic, retain) NSMutableArray *arrayOfCoreDataEvents;
 
-//- (void) setUpViewControllers;
 - (void) setUpURLConnection;
 - (void) distributeParsedData:(NSArray *) parsedData;
 - (void) handleError:(NSError *)error;
 @end
 
 @implementation AppDelegate
-
-//NSString *kNotificationDestroyAllNSFetchedResultsControllers = @"NotificationDestroyAllNSFetchedResultsControllers";
 
 @synthesize window;
 @synthesize webConnection;
@@ -51,7 +43,6 @@
 @synthesize arrayOfCoreDataEvents;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
-//@synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 static NSString * const kEvents = @"events";
@@ -76,7 +67,7 @@ static NSString * const kEvents = @"events";
     shadow.shadowOffset = CGSizeMake(0, 1);
 
 	[[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                       [UIColor redColor], NSForegroundColorAttributeName,
+                                                       [UIColor colorWithRed:252.0 green:0.0 blue:0.0 alpha:1.0], NSForegroundColorAttributeName,
                                                        shadow, NSShadowAttributeName,
                                                        [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:25.0], NSFontAttributeName, nil]];
 				
@@ -101,10 +92,10 @@ static NSString * const kEvents = @"events";
     //#ifdef TESTING
     //    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     //#endif
-    #define TESTING 1
-	#ifdef TESTING
-		[SparkInspector enableObservation];
-	#endif
+//    #define TESTING 1
+//	#ifdef TESTING
+//		[SparkInspector enableObservation];
+//	#endif
     [self setUpURLConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -351,7 +342,7 @@ static NSString * const kEvents = @"events";
 
     LogMethod();
 	
-	InsertEvents *insertEvents = [InsertEvents alloc];
+	EventsInCoreData *insertEvents = [EventsInCoreData alloc];
 	insertEvents.managedObjectContext = self.managedObjectContext;
 	
     if (self.firstTimeThru) {
@@ -360,8 +351,7 @@ static NSString * const kEvents = @"events";
 
 			NSLog (@"Event %@ %@ %@", event.eventId, event.name, event.beginDate);
 		}
-//		[insertEvents removeAllEventsFromCoreData];
-        self.firstTimeThru = NO;  //only reset Core Data the first time that data is coming in here in case it comes back in multiple batches
+        self.firstTimeThru = NO;
     }
 	// check if core data is empty, just add all events at once
 	if ([arrayOfCoreDataEvents count] == 0) {
@@ -378,36 +368,33 @@ static NSString * const kEvents = @"events";
 		return [first compare:second];
 	}];
 
-	//
-	NSArray *incomingEventIds = [self listOfIDsAsString: incomingEventsArray];
-
-	NSLog (@"ids coming in %@", incomingEventIds);
-
-	//index i is for array of incoming events (incomingEventsArray and incomingEventIds
+	//index i is for array of incoming events (incomingEventsArray 
 	//index j is for array of events currently in CoreData (arrayOfCoreDataEvents)
 	int i, j;
-	for (i = 0,j = 0; i < [incomingEventIds count]; i++) {
+	for (i = 0,j = 0; i < [incomingEventsArray count]; i++) {
 	
-		NSNumber *coreDataId;
-		NSNumber *incomingId = [NSNumber numberWithInt: [[incomingEventIds objectAtIndex: i] intValue]];
+		int incomingId = [[[incomingEventsArray objectAtIndex: i] valueForKey: @"id"]intValue];
+		int coreDataId;
+
 		//if there aren't any events left in the arrayOfCoreDataEvents then just add the incoming event
 		if ([arrayOfCoreDataEvents count] > 0) {
-			coreDataId = [NSNumber numberWithInt: [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue]];
+			coreDataId = [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue];
 		} else {
 			[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
 			break;
 		}
-//		NSNumber *coreDataId = [(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId];
 
 
 //		NSLog (@"incomingEventId is %@", incomingId);
 //		NSLog (@"coreDataEventId is %@", coreDataId);
 		
-		while (incomingId.intValue > coreDataId.intValue) {
+		while (incomingId > coreDataId) {
+
 				//if there are more objects in the arrayOfCoreDataEvents then bump up
 				if ((j + 1) < [arrayOfCoreDataEvents count]) {
 					j++;
-					coreDataId = [NSNumber numberWithInt: [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue]];
+					coreDataId = [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue];
+
 				} else {
 					//entry is not already in core data so add it - this is a new id higher than any in core data
 					[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
@@ -416,13 +403,13 @@ static NSString * const kEvents = @"events";
 
 		}
 		//if event ids match then insert the new event
-		if (incomingId.intValue < coreDataId.intValue) {
+		if (incomingId < coreDataId) {
 			//entry is not already in core data so add it
 			[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
-		} else if (incomingId.intValue == coreDataId.intValue) {
+		} else if (incomingId == coreDataId) {
 			[insertEvents updateEventInCoreData: [incomingEventsArray objectAtIndex: i]];
 			[arrayOfCoreDataEvents removeObjectAtIndex: j];
-			//not sure whether to increment j or if it should stay where it is because next object becomes current
+			//don't increment j, it should stay where it is because next object becomes current
 		}
 	}
 
@@ -435,14 +422,6 @@ static NSString * const kEvents = @"events";
 	[insertEvents listEvents];
 }
 
-- (NSArray *) listOfIDsAsString: (NSArray *) sortedArray {
-	NSMutableArray *arrayOfIDs = [[NSMutableArray alloc] initWithCapacity: [sortedArray count]];
-	for (NSDictionary* event in sortedArray) {
-		[arrayOfIDs addObject: [event objectForKey: @"id"]];
-	}
-	return arrayOfIDs;
-		
-}
 #pragma mark -
 #pragma mark save context method
 - (void)saveContext

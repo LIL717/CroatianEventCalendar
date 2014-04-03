@@ -9,6 +9,7 @@
 @import UIKit;
 @import MessageUI;
 @import MapKit;
+@import EventKit;
 
 #import <OHAttributedLabel/OHAttributedLabel.h>
 
@@ -17,7 +18,6 @@
 @property (strong, nonatomic) id detailItem;
 
 @property (strong, nonatomic) IBOutlet UILabel *name;
-//@property (strong, nonatomic) IBOutlet OHAttributedLabel *location;
 @property (strong, nonatomic) IBOutlet UIButton *location;
 @property (strong, nonatomic) IBOutlet UILabel *beginDate;
 @property (strong, nonatomic) IBOutlet UILabel *endDate;
@@ -42,5 +42,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *linkHeight;
 
 - (IBAction)openMapWithAddress:(id)sender;
+- (IBAction)handleMoreButton:(id)sender;
+- (IBAction)addToiCal:(id)sender;
 
 @end

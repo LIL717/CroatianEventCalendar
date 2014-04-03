@@ -1,15 +1,15 @@
 //
-//  InsertEvents.m
+//  EventsInCoreData.m
 //  CroatianEventCalendar
 //
 //  Created by Lori Hill on 10/28/2013.
 //  Copyright 2013 CroatianEventCalendar. All rights reserved.
 //
 
-#import "InsertEvents.h"
+#import "EventsInCoreData.h"
 #import "Event.h"
 
-@implementation InsertEvents
+@implementation EventsInCoreData
 
 @synthesize event = event_;
 @synthesize managedObjectContext = managedObjectContext_;

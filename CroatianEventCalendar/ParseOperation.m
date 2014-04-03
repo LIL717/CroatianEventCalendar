@@ -117,7 +117,7 @@ NSString *kEventMsgErrorKey = @"EventMsgErrorKey";
 
 // Limit the number of parsed records 
 //
-static const NSUInteger kMaximumNumberOfRecordsToParse = 150;
+static const NSUInteger kMaximumNumberOfRecordsToParse = 2000;
 
 // When an parsed object has been fully constructed, it must be passed to the main thread and
 // loaded into Core Data.   It is not efficient to do

@@ -1,5 +1,5 @@
 //
-//  InsertEvents.h
+//  EventsInCoreData.h
 //  CroatianEventCalendar
 //
 //  Created by Lori Hill on 10/28/2013.
@@ -8,7 +8,7 @@
 
 @class Event;
 
-@interface InsertEvents : NSManagedObject {
+@interface EventsInCoreData : NSManagedObject {
 
     Event *event_;
 }

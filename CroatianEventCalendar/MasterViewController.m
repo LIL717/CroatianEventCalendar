@@ -10,8 +10,9 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
-#import "InsertEvents.h"
+#import "EventsInCoreData.h"
 #import "Event.h"
+
 
 
 @interface MasterViewController ()
@@ -45,7 +46,6 @@
 	
 //	InsertEvents *insertEvents = [InsertEvents alloc];
 //	insertEvents.managedObjectContext = self.managedObjectContext;
-//	
 //	[insertEvents listEvents];
 
     NSError *error;
@@ -221,4 +221,31 @@ arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
     // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
     [self.tableView endUpdates];
 }
+- (IBAction)addEventViaEmail:(id)sender {
+
+        if ([MFMailComposeViewController canSendMail])
+        {
+            MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
+            controller.mailComposeDelegate = self;
+            [controller setSubject:@"Croatian Calendar Request"];
+            [controller setMessageBody:@"Please add the following event to the Croatian Event Calendar.<br /><br />Event Name:<br />Location: <br />Begin Date and Time: <br /> End Date and Time: <br />Email: <br />Phone: <br />Website: <br />Description:  " isHTML:YES];
+            [controller setToRecipients:[NSArray arrayWithObjects:@"calendar@croatiafest.org",nil]];
+			[self presentViewController:controller animated:YES completion:nil];        }
+        else{
+            UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"alrt" message:nil delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil] ;
+            [alert show];
+        }
+
+    }
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result 
+                        error:(NSError*)error;
+{
+  if (result == MFMailComposeResultSent) {
+    NSLog(@"Request sent");
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 @end

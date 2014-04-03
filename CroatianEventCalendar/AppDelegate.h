@@ -7,11 +7,10 @@
 //
 
 @import UIKit;
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
-#import "MasterViewController.h"
+@import Foundation;
+@import CoreData;
 
-extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
+//extern NSString *kNotificationDestroyAllNSFetchedResultsControllers;
 
 @interface AppDelegate : NSObject <UIApplicationDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate> {
     

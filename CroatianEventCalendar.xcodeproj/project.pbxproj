@@ -37,7 +37,7 @@
 		701C3D6C181EBD3E007FFDF1 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 701C3D62181EBD3E007FFDF1 /* iTunesArtwork.png */; };
 		701C3D6D181EBD3E007FFDF1 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 701C3D63181EBD3E007FFDF1 /* iTunesArtwork@2x.png */; };
 		701C3D74181EBF21007FFDF1 /* ParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D73181EBF21007FFDF1 /* ParseOperation.m */; };
-		701C3D77181EC513007FFDF1 /* InsertEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D76181EC513007FFDF1 /* InsertEvents.m */; };
+		701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D76181EC513007FFDF1 /* EventsInCoreData.m */; };
 		701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D79181EE0A4007FFDF1 /* Event.m */; };
 		708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */ = {isa = PBXBuildFile; fileRef = 708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */; };
 		70DE19DF18E7833100885F07 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70DE19DE18E7833000885F07 /* WebViewController.m */; };
@@ -91,8 +91,8 @@
 		701C3D63181EBD3E007FFDF1 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		701C3D72181EBF21007FFDF1 /* ParseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseOperation.h; sourceTree = "<group>"; };
 		701C3D73181EBF21007FFDF1 /* ParseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseOperation.m; sourceTree = "<group>"; };
-		701C3D75181EC513007FFDF1 /* InsertEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsertEvents.h; sourceTree = "<group>"; };
-		701C3D76181EC513007FFDF1 /* InsertEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsertEvents.m; sourceTree = "<group>"; };
+		701C3D75181EC513007FFDF1 /* EventsInCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsInCoreData.h; sourceTree = "<group>"; };
+		701C3D76181EC513007FFDF1 /* EventsInCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsInCoreData.m; sourceTree = "<group>"; };
 		701C3D78181EE0A4007FFDF1 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		701C3D79181EE0A4007FFDF1 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		708BDB6018E9E63600077A0A /* UIAlertView+Commodity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Commodity.h"; sourceTree = "<group>"; };
@@ -171,8 +171,8 @@
 				701C3D2A181EBCBA007FFDF1 /* AppDelegate.m */,
 				701C3D72181EBF21007FFDF1 /* ParseOperation.h */,
 				701C3D73181EBF21007FFDF1 /* ParseOperation.m */,
-				701C3D75181EC513007FFDF1 /* InsertEvents.h */,
-				701C3D76181EC513007FFDF1 /* InsertEvents.m */,
+				701C3D75181EC513007FFDF1 /* EventsInCoreData.h */,
+				701C3D76181EC513007FFDF1 /* EventsInCoreData.m */,
 				701C3D7B181EE4A4007FFDF1 /* Model */,
 				701C3D7C181EE4E4007FFDF1 /* View */,
 				701C3D7D181EE509007FFDF1 /* Controller */,
@@ -434,7 +434,7 @@
 				70DE19DF18E7833100885F07 /* WebViewController.m in Sources */,
 				701C3D37181EBCBA007FFDF1 /* MasterViewController.m in Sources */,
 				701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */,
-				701C3D77181EC513007FFDF1 /* InsertEvents.m in Sources */,
+				701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */,
 				708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */,
 				701C3D34181EBCBA007FFDF1 /* CroatianEventCalendar.xcdatamodeld in Sources */,
 				701C3D74181EBF21007FFDF1 /* ParseOperation.m in Sources */,

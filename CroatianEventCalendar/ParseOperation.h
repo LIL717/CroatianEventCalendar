@@ -5,7 +5,7 @@
 //  Created by Lori Hill on 10/28/2013.
 //  Copyright 2013 CroatianEventCalendar. All rights reserved.
 //
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 #define EVENT_FEED_TAGS @"id", @"name", @"hour", @"minute", @"ampm", @"hour_end", @"minute_end", @"ampm_end", @"month", @"day", @"year", @"month_end", @"location", @"email", @"phone", @"link", @"link_name", @"description", @"html", nil
 
@@ -16,8 +16,6 @@ extern NSString *kDoneParsingNotif;
 
 extern NSString *kEventErrorNotif;
 extern NSString *kEventMsgErrorKey;
-
-//@class VersionController;
 
 @interface ParseOperation : NSOperation {
     

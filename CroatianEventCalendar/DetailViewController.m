@@ -13,9 +13,7 @@
 #import <OHAttributedLabel/NSAttributedString+Attributes.h>
 #import <OHAttributedLabel/OHASBasicHTMLParser.h>
 #import <OHAttributedLabel/OHASBasicMarkupParser.h>
-
-
-
+#import <EventKit/EventKit.h>
 
 @interface DetailViewController ()<UIActionSheetDelegate>
 @property(nonatomic, retain) NSMutableSet* visitedLinks;
@@ -70,40 +68,73 @@
 {
     // Update the user interface for the detail item.
 
+	BOOL dataInItem;
     if (self.detailItem) {
         self.name.text = [[self.detailItem valueForKey:@"name"] description];
 		
-		if ([[self.detailItem valueForKey:@"location"] description]) {
+		dataInItem = [self trimString:[[self.detailItem valueForKey:@"location"] description]];
+		if (dataInItem) {
 			//location is a label because OHAttributedLabel does not handle more than one line of text
 			// and textView was not picking up enough of the address :(
 			
-			[self.location setTitle: [[self.detailItem valueForKey:@"location"] description] forState:UIControlStateNormal];
-			CGSize labelSize = [self.location sizeThatFits:CGSizeMake(self.location.frame.size.width, FLT_MAX)];
-			self.locationHeight.constant = labelSize.height;
-			
-//			NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeAddress error:nil];
-//
-//			[detector enumerateMatchesInString:self.location.text
-//                         options:0 
-//                           range:NSMakeRange(0, [self.location.text length])
-//                      usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-//
-//            
-//                NSDictionary *address = [result addressComponents];
-//                NSLog(@"addressComponents  %@",address);
-//            
-//
-//                      }];
-			
+			NSString *locationString = [[self.detailItem valueForKey:@"location"] description];
+			NSString *formattedLocationString = locationString;
+			BOOL foundHouseNumber = NO;
+			BOOL probablyAStreetNumber = NO;
+			NSLog (@"%@", locationString);
 
+			//look through the address, either find location of first number (street address) or first comma (and then make sure there is a second comma)
+			NSRange rangeOfFirstDigit = [locationString rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]];
+			if (rangeOfFirstDigit.location != NSNotFound) {
+				//need to check if character 2 spaces in front is a Capital letter or a period in case the number is street number not a house number
+				if (rangeOfFirstDigit.location > 1) {
+								NSLog (@"%C",[locationString characterAtIndex:rangeOfFirstDigit.location - 2]);
+
+					if ([[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember: [locationString characterAtIndex:rangeOfFirstDigit.location - 2]]
+					|| [[NSCharacterSet characterSetWithCharactersInString: @"."] characterIsMember: [locationString characterAtIndex:rangeOfFirstDigit.location - 2]]) {
+						NSLog (@"this is probably a street number");
+						foundHouseNumber = NO;
+						probablyAStreetNumber = YES;
+					}
+				}
+				if (!probablyAStreetNumber) {
+					if (rangeOfFirstDigit.location > 0) {
+					 formattedLocationString = [locationString stringByReplacingCharactersInRange: NSMakeRange (rangeOfFirstDigit.location - 1, 1) withString:@"\n"];
+						foundHouseNumber = YES;
+					}
+				}
+				
+			}
+			if (!foundHouseNumber) {
+				//find first comma instead
+				NSRange rangeOfFirstComma = [locationString rangeOfCharacterFromSet: [NSCharacterSet characterSetWithCharactersInString: @","]];
+				if (rangeOfFirstComma.location != NSNotFound) {
+					if (rangeOfFirstComma.location > 0) {
+						//make sure this is not the comma between the city and state
+						if (rangeOfFirstComma.location > 5) {
+							if (rangeOfFirstComma.location < [locationString length] - 6) {
+								formattedLocationString = [locationString stringByReplacingCharactersInRange: NSMakeRange (rangeOfFirstComma.location, 2) withString:@"\n"];
+								}
+						}
+					}
+				}
+			}
+			NSLog (@"%@", formattedLocationString);
+			[self.location setTitle: formattedLocationString forState:UIControlStateNormal];
+
+
+			//autolayout is not doing this automatically so set height of button to match height of textLabel
+			self.locationHeight.constant = self.location.titleLabel.frame.size.height;
 		} else {
 			self.locationHeight.constant = 0;
 			self.nameToLocationConstraint.constant = 0;
 		}
 		
 		[self formatDates];
-
-		if ([[self.detailItem valueForKey:@"email"] description]) {
+		
+		dataInItem = [self trimString:[[self.detailItem valueForKey:@"email"] description]];
+		if (dataInItem) {
+			NSLog (@" email is %@",[[self.detailItem valueForKey:@"email"] description]);
 			self.email.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"email"] description]];
 			self.email.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.email.delegate = self; // Delegate methods are called when the user taps on a link
@@ -112,7 +143,8 @@
 			self.endDateToEmailConstraint.constant = 0;
 		}
 		
-		if ([[self.detailItem valueForKey:@"phone"] description]) {
+		dataInItem = [self trimString:[[self.detailItem valueForKey:@"phone"] description]];
+		if (dataInItem) {
 			self.phone.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"phone"] description]];
 			self.phone.automaticallyAddLinksForType = NSTextCheckingTypePhoneNumber;
 			self.phone.delegate = self; // Delegate methods are called when the user taps on a link
@@ -121,8 +153,8 @@
 			self.emailToPhoneConstraint.constant = 0;
 		}
 
-
-		if ([[self.detailItem valueForKey:@"link"] description]) {
+		dataInItem = [self trimString:[[self.detailItem valueForKey:@"link"] description]];
+		if (dataInItem) {
 			self.link.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"link"] description]];
 			self.link.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.link.delegate = self; // Delegate methods are called when the user taps on a link
@@ -132,7 +164,8 @@
 			self.phoneToLinkConstraint.constant = 0;
 		}
 
-		if ([[self.detailItem valueForKey:@"desc"] description]) {
+		dataInItem = [self trimString:[[self.detailItem valueForKey:@"desc"] description]];
+		if (dataInItem) {
 			//description is a textView because OHAttributedLabel can't handle more than one line of text
 			self.desc.text = [[self.detailItem valueForKey:@"desc"] description];
 		} else {
@@ -142,7 +175,14 @@
 
     }
 }
-
+- (BOOL) trimString: (NSString *) string {
+		NSString *trimmed = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		if ([trimmed isEqualToString: @""]) {
+			return NO;
+		} else {
+			return YES;
+		}
+}
 - (NSAttributedString *) buildAttributedString: (NSString *) text {
 	/**(1)** Build the NSAttributedString *******/
 	NSMutableAttributedString* attrStr = [[[NSAttributedString alloc] initWithString: text] mutableCopy];
@@ -233,11 +273,7 @@
         
     }
 }
-- (IBAction) openMapViewForAddress: (NSString *) addressString {
 
-
-
-}
 #pragma mark - Split view
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
@@ -359,5 +395,46 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 		
 	UIApplication *application = [UIApplication sharedApplication];
 	[application openURL:map_url];
+}
+
+- (IBAction)handleMoreButton:(id)sender {
+	
+	NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
+	NSURL *myURL = [NSURL URLWithString: myURLString];
+	NSArray *activityItems = [[NSArray alloc] initWithObjects: self.name.text, self.beginDate.text, self.location.titleLabel.text,[NSString stringWithFormat:@"%@", myURL], nil];
+		
+	NSArray * applicationActivities = nil;
+//	NSArray * excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeMessage];
+
+	UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:applicationActivities];
+//	[activityViewController excludeActivityTypes: excludeActivities];
+	[activityViewController setValue: self.name.text forKey:@"subject"];
+	
+	[self presentViewController:activityViewController animated:YES completion:nil];
+
+}
+
+- (IBAction)addToiCal:(id)sender {
+	    EKEventStore *store = [[EKEventStore alloc] init];
+    [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+        if (granted) {
+//			return;
+//		}
+        EKEvent *event = [EKEvent eventWithEventStore:store];
+        event.title = self.name.text;
+		event.location = self.location.titleLabel.text;
+        event.startDate = [self.detailItem valueForKey:@"beginDate"]; //NSDate
+        event.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
+		event.notes = self.desc.text;
+		NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
+		NSURL *myURL = [NSURL URLWithString: myURLString];
+		event.URL = myURL;
+        [event setCalendar:[store defaultCalendarForNewEvents]];
+        NSError *err = nil;
+        [store saveEvent:event span:EKSpanThisEvent commit:YES error:&err];
+//        NSString *savedEventId = event.eventIdentifier;  //this is so you can access this event later
+		}
+    }];
+
 }
 @end

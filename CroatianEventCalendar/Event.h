@@ -6,8 +6,6 @@
 //  Copyright 2013 CroatianEventCalendar. All rights reserved.
 //
 
-@class Schedule;
-
 @interface Event : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * eventId;
