@@ -7,7 +7,7 @@
 //
 @import Foundation;
 
-#define EVENT_FEED_TAGS @"id", @"name", @"hour", @"minute", @"ampm", @"hour_end", @"minute_end", @"ampm_end", @"month", @"day", @"year", @"month_end", @"location", @"email", @"phone", @"link", @"link_name", @"description", @"html", nil
+#define EVENT_FEED_TAGS @"id", @"name", @"hour", @"minute", @"ampm", @"hour_end", @"minute_end", @"ampm_end", @"month", @"day", @"year", @"month_end", @"day_end", @"year_end", @"location", @"email", @"phone", @"link", @"link_name", @"description", @"html", nil
 
 
 extern NSString *kAddEventNotif;

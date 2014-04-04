@@ -14,8 +14,15 @@
 #import <OHAttributedLabel/OHASBasicHTMLParser.h>
 #import <OHAttributedLabel/OHASBasicMarkupParser.h>
 #import <EventKit/EventKit.h>
+//#import <EventKitUI/EventKitUI.h>
 
 @interface DetailViewController ()<UIActionSheetDelegate>
+// EKEventStore instance associated with the current Calendar application
+@property (nonatomic, strong) EKEventStore *eventStore;
+
+// Default calendar associated with the above event store
+@property (nonatomic, strong) EKCalendar *defaultCalendar;
+@property (nonatomic, strong) EKEvent *calendarEvent;
 @property(nonatomic, retain) NSMutableSet* visitedLinks;
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 - (void)configureView;
@@ -56,7 +63,15 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	self.navigationController.navigationBar.translucent = YES;
+	
+	// Initialize the event store for adding to Calendar
+	self.eventStore = [[EKEventStore alloc] init];
+	
+	//set up the calendarEvent here, even if it doesn't get used, so that as the view is poplulated the event can be populated too
+	self.calendarEvent = [EKEvent eventWithEventStore:self.eventStore];
+	
     [self configureView];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,6 +86,8 @@
 	BOOL dataInItem;
     if (self.detailItem) {
         self.name.text = [[self.detailItem valueForKey:@"name"] description];
+		self.calendarEvent.title = self.name.text;
+
 		
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"location"] description]];
 		if (dataInItem) {
@@ -81,18 +98,18 @@
 			NSString *formattedLocationString = locationString;
 			BOOL foundHouseNumber = NO;
 			BOOL probablyAStreetNumber = NO;
-			NSLog (@"%@", locationString);
+//			NSLog (@"%@", locationString);
 
 			//look through the address, either find location of first number (street address) or first comma (and then make sure there is a second comma)
 			NSRange rangeOfFirstDigit = [locationString rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]];
 			if (rangeOfFirstDigit.location != NSNotFound) {
 				//need to check if character 2 spaces in front is a Capital letter or a period in case the number is street number not a house number
 				if (rangeOfFirstDigit.location > 1) {
-								NSLog (@"%C",[locationString characterAtIndex:rangeOfFirstDigit.location - 2]);
+//								NSLog (@"%C",[locationString characterAtIndex:rangeOfFirstDigit.location - 2]);
 
 					if ([[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember: [locationString characterAtIndex:rangeOfFirstDigit.location - 2]]
 					|| [[NSCharacterSet characterSetWithCharactersInString: @"."] characterIsMember: [locationString characterAtIndex:rangeOfFirstDigit.location - 2]]) {
-						NSLog (@"this is probably a street number");
+//						NSLog (@"this is probably a street number");
 						foundHouseNumber = NO;
 						probablyAStreetNumber = YES;
 					}
@@ -119,8 +136,10 @@
 					}
 				}
 			}
-			NSLog (@"%@", formattedLocationString);
+//			NSLog (@"%@", formattedLocationString);
 			[self.location setTitle: formattedLocationString forState:UIControlStateNormal];
+			self.calendarEvent.location = formattedLocationString;
+
 
 
 			//autolayout is not doing this automatically so set height of button to match height of textLabel
@@ -134,7 +153,7 @@
 		
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"email"] description]];
 		if (dataInItem) {
-			NSLog (@" email is %@",[[self.detailItem valueForKey:@"email"] description]);
+//			NSLog (@" email is %@",[[self.detailItem valueForKey:@"email"] description]);
 			self.email.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"email"] description]];
 			self.email.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.email.delegate = self; // Delegate methods are called when the user taps on a link
@@ -158,6 +177,9 @@
 			self.link.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"link"] description]];
 			self.link.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.link.delegate = self; // Delegate methods are called when the user taps on a link
+			NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
+			NSURL *myURL = [NSURL URLWithString: myURLString];
+			self.calendarEvent.URL = myURL;
 		} else {
 			self.link.hidden = YES;
 			self.linkHeight.constant = 0;
@@ -168,6 +190,7 @@
 		if (dataInItem) {
 			//description is a textView because OHAttributedLabel can't handle more than one line of text
 			self.desc.text = [[self.detailItem valueForKey:@"desc"] description];
+			self.calendarEvent.notes = self.desc.text;
 		} else {
 			self.desc.hidden = YES;
 			self.linkToDescriptionConstraint.constant = 0;
@@ -224,23 +247,25 @@
 	NSString *theBeginTime = [timeFormat stringFromDate: [self.detailItem valueForKey:@"beginDate"]];
 
 	//if no time was entered display as blank
-	unsigned timeUnitFlags = NSCalendarUnitHour  | NSCalendarUnitMinute;
+	unsigned timeUnitFlags = NSCalendarUnitHour  | NSCalendarUnitMinute |NSCalendarUnitSecond;
 	NSDateComponents *beginTimeComps = [[NSCalendar currentCalendar] components:timeUnitFlags fromDate:[self.detailItem valueForKey:@"beginDate"]];
 	if (beginTimeComps.hour == 0 && beginTimeComps.minute == 0) {
 		theBeginTime = @"";
+		self.calendarEvent.allDay = YES;
+	} else {
+		self.calendarEvent.allDay = NO;
 	}
-	
+	self.calendarEvent.startDate = [self.detailItem valueForKey:@"beginDate"]; //NSDate
+
 	
 	NSString *theEndDate = [dateFormat stringFromDate:[self.detailItem valueForKey:@"endDate"]];
 	NSString *theEndTime = [timeFormat stringFromDate: [self.detailItem valueForKey:@"endDate"]];
 		
-		//if no time was entered display as blank
-	unsigned dateUnitFlags = NSCalendarUnitMonth  | NSCalendarUnitDay | NSCalendarUnitYear;
-	NSDateComponents *endDateComps = [[NSCalendar currentCalendar] components:dateUnitFlags fromDate:[self.detailItem valueForKey:@"endDate"]];
-	//there is a bug with the way Apple stores a zero date in core data -
-	// stores as 0002-11-30 07:52:58 +0000
-	if ((endDateComps.month == 0 && endDateComps.day == 0 && endDateComps.year == 0) || (endDateComps.year < 2000)) {
+	if ([theBeginDate isEqualToString: theEndDate]) {
 		theEndDate = @"";
+		if ([theBeginTime isEqualToString: theEndTime]) {
+			theEndTime = @"";
+		}
 	}
 	
 	NSDateComponents *endTimeComps = [[NSCalendar currentCalendar] components:timeUnitFlags fromDate:[self.detailItem valueForKey:@"endDate"]];
@@ -249,20 +274,34 @@
 	if ((endTimeComps.hour == 0 && endTimeComps.minute == 0) || (endTimeComps.second != 0)) {
 		theEndTime = @"";
 	}
-	
-	if ([theEndDate isEqualToString:@""]) {
-		self.endDateHeight.constant = 0;
-		self.beginDateToEndDateConstraint.constant = 0;
-		if ([theEndTime isEqualToString: @""]) {
+		
+	self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
+
+	if ([theEndDate isEqualToString:@""]) {		//no end date
+		if ([theEndTime isEqualToString:@""]) {  //no end date or time
+			self.endDateHeight.constant = 0;
+			self.beginDateToEndDateConstraint.constant = 0;
+			self.endDate.hidden = YES;
 			self.beginDate.text = [NSString stringWithFormat: @"%@  %@", theBeginDate, theBeginTime];
-		} else {
-			self.beginDate.text = [NSString stringWithFormat: @"%@  %@ - %@", theBeginDate, theBeginTime, theEndTime];
+		} else {									//no end date, but end time so ends same day
+			self.beginDate.text = [NSString stringWithFormat: @"%@", theBeginDate];
+			self.beginDateToEndDateConstraint.constant = 2;
+			self.endDate.text = [NSString stringWithFormat:@"%@ - %@", theBeginTime, theEndTime];
 		}
-	} else {
-		self.endDate.hidden = NO;
-		self.beginDate.text = [NSString stringWithFormat: @"%@  %@ -", theBeginDate, theBeginTime];
-		self.endDate.text = [NSString stringWithFormat: @"%@  %@", theEndDate, theEndTime];
+	} else {									 //different dates
+			self.endDate.hidden = NO;
+			if ([theBeginTime isEqualToString: @""]) {     //different dates but no begin time
+				self.beginDate.text = [NSString stringWithFormat: @"%@ -", theBeginDate];
+			} else {										//different dates with a time
+				self.beginDate.text = [NSString stringWithFormat: @"%@  %@ -", theBeginDate, theBeginTime];
+			}
+			if ([theEndTime isEqualToString: @""]) {		//different dates but no end time
+				self.endDate.text = [NSString stringWithFormat: @"%@", theEndDate];
+			} else {										//differnt dates and an end time
+				self.endDate.text = [NSString stringWithFormat: @"%@  %@", theEndDate, theEndTime];
+			}
 	}
+
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -389,7 +428,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 	NSString *escapedAddress = [addressString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	NSString *addressUrl = [NSString stringWithFormat: @"http://maps.apple.com/?q=%@", escapedAddress];
 	
-	NSLog(@"Maps String: %@", addressUrl);
+//	NSLog(@"Maps String: %@", addressUrl);
 	
     NSURL *map_url = [NSURL URLWithString:addressUrl];
 		
@@ -398,6 +437,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 }
 
 - (IBAction)handleMoreButton:(id)sender {
+	
 	
 	NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
 	NSURL *myURL = [NSURL URLWithString: myURLString];
@@ -413,28 +453,90 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 	[self presentViewController:activityViewController animated:YES completion:nil];
 
 }
-
 - (IBAction)addToiCal:(id)sender {
-	    EKEventStore *store = [[EKEventStore alloc] init];
-    [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
-        if (granted) {
-//			return;
-//		}
-        EKEvent *event = [EKEvent eventWithEventStore:store];
-        event.title = self.name.text;
-		event.location = self.location.titleLabel.text;
-        event.startDate = [self.detailItem valueForKey:@"beginDate"]; //NSDate
-        event.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
-		event.notes = self.desc.text;
-		NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
-		NSURL *myURL = [NSURL URLWithString: myURLString];
-		event.URL = myURL;
-        [event setCalendar:[store defaultCalendarForNewEvents]];
-        NSError *err = nil;
-        [store saveEvent:event span:EKSpanThisEvent commit:YES error:&err];
-//        NSString *savedEventId = event.eventIdentifier;  //this is so you can access this event later
-		}
-    }];
+
+	    // Check whether we are authorized to access Calendar
+    [self checkEventStoreAccessForCalendar];
+		if (self.calendarEvent.endDate) {
+		self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
+	} else {
+		self.calendarEvent.endDate = [self.detailItem valueForKey:@"beginDate"];  //if no endDate was entered, use begin Date for end date
+	}
+	[self.calendarEvent setCalendar: self.defaultCalendar];
+	NSError *err = nil;
+	[self.eventStore saveEvent:self.calendarEvent span:EKSpanThisEvent commit:YES error:&err];
+	
+	NSString *eventTitle = self.calendarEvent.title;
+	NSString *eventAddedMessage;
+	if (err) {
+		eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - code %@", err];
+	} else {
+		eventAddedMessage = @"Event successfully added to calendar";
+	}
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:eventTitle message:eventAddedMessage
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+	[alert show];
 
 }
+#pragma mark -
+#pragma mark Access Calendar
+
+// Check the authorization status of our application for Calendar 
+-(void)checkEventStoreAccessForCalendar
+{
+    EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];    
+ 
+    switch (status)
+    {
+        // Update our UI if the user has granted access to their Calendar
+        case EKAuthorizationStatusAuthorized: [self accessGrantedForCalendar];
+            break;
+        // Prompt the user for access to Calendar if there is no definitive answer
+        case EKAuthorizationStatusNotDetermined: [self requestCalendarAccess];
+            break;
+        // Display a message if the user has denied or restricted access to Calendar
+        case EKAuthorizationStatusDenied:
+        case EKAuthorizationStatusRestricted:
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Privacy Warning" message:@"Permission was not granted for Calendar"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+
+// Prompt the user for access to their Calendar
+-(void)requestCalendarAccess
+{
+    [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error)
+    {
+         if (granted)
+         {
+             DetailViewController * __weak weakSelf = self;
+             // Let's ensure that our code will be executed from the main queue
+             dispatch_async(dispatch_get_main_queue(), ^{
+             // The user has granted access to their Calendar; let's populate our UI with all events occuring in the next 24 hours.
+                 [weakSelf accessGrantedForCalendar];
+             });
+         }
+     }];
+}
+
+
+// This method is called when the user has granted permission to Calendar
+-(void)accessGrantedForCalendar
+{
+    // Let's get the default calendar associated with our event store
+    self.defaultCalendar = self.eventStore.defaultCalendarForNewEvents;
+
+}
+
 @end
