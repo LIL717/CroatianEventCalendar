@@ -17,14 +17,15 @@
 
 @property (strong, nonatomic) id detailItem;
 
-@property (strong, nonatomic) IBOutlet UILabel *name;
-@property (strong, nonatomic) IBOutlet UIButton *location;
-@property (strong, nonatomic) IBOutlet UILabel *beginDate;
-@property (strong, nonatomic) IBOutlet UILabel *endDate;
-@property (strong, nonatomic) IBOutlet OHAttributedLabel *email;
-@property (strong, nonatomic) IBOutlet OHAttributedLabel *phone;
-@property (strong, nonatomic) IBOutlet OHAttributedLabel *link;
-@property (strong, nonatomic) IBOutlet UITextView *desc;
+@property (weak, nonatomic) IBOutlet UILabel *name;
+@property (weak, nonatomic) IBOutlet UIButton *location;
+@property (weak, nonatomic) IBOutlet UILabel *beginDate;
+@property (weak, nonatomic) IBOutlet UILabel *endDate;
+@property (weak, nonatomic) IBOutlet OHAttributedLabel *email;
+@property (weak, nonatomic) IBOutlet OHAttributedLabel *phone;
+@property (weak, nonatomic) IBOutlet OHAttributedLabel *link;
+@property (weak, nonatomic) IBOutlet UITextView *desc;
+@property (weak, nonatomic) IBOutlet UIButton *iCalButton;
 
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *beginDateToEndDateConstraint;

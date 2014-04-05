@@ -39,6 +39,7 @@
     self.managedObjectContext = [self.appDelegate managedObjectContext];
 
 	// Do any additional setup after loading the view, typically from a nib.
+//    self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	

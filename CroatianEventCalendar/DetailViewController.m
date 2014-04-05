@@ -51,34 +51,14 @@
         _detailItem = newDetailItem;
         
         // Update the view.
-//        [self configureView];
+        [self configureView];
     }
 
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
     }        
 }
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-	self.navigationController.navigationBar.translucent = YES;
-	
-	// Initialize the event store for adding to Calendar
-	self.eventStore = [[EKEventStore alloc] init];
-	
-	//set up the calendarEvent here, even if it doesn't get used, so that as the view is poplulated the event can be populated too
-	self.calendarEvent = [EKEvent eventWithEventStore:self.eventStore];
-	
-    [self configureView];
 
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 - (void)configureView
 {
     // Update the user interface for the detail item.
@@ -139,6 +119,7 @@
 //			NSLog (@"%@", formattedLocationString);
 			[self.location setTitle: formattedLocationString forState:UIControlStateNormal];
 			self.calendarEvent.location = formattedLocationString;
+			self.location.enabled = YES;
 
 
 
@@ -149,8 +130,12 @@
 //			self.nameToLocationConstraint.constant = 0;
 		}
 		
-		[self formatDates];
-		
+		if ([[self.detailItem valueForKey:@"beginDate"] description]) {
+			[self formatDates];
+			self.iCalButton.hidden = NO;
+			self.iCalButton.enabled = YES;
+		}
+			
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"email"] description]];
 		if (dataInItem) {
 //			NSLog (@" email is %@",[[self.detailItem valueForKey:@"email"] description]);
@@ -312,12 +297,33 @@
         
     }
 }
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view, typically from a nib.
+	
+	self.navigationController.navigationBar.translucent = YES;
+	
+	// Initialize the event store for adding to Calendar
+	self.eventStore = [[EKEventStore alloc] init];
+	
+	//set up the calendarEvent here, even if it doesn't get used, so that as the view is poplulated the event can be populated too
+	self.calendarEvent = [EKEvent eventWithEventStore:self.eventStore];
+		
+	[self configureView];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 #pragma mark - Split view
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Master", @"Master");
+    barButtonItem.title = NSLocalizedString(@"All Events", @"All Events");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }

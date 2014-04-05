@@ -55,7 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CroatianEventCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		701C3D15181EBCBA007FFDF1 /* CroEvents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CroEvents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		701C3D18181EBCBA007FFDF1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		701C3D1A181EBCBA007FFDF1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		701C3D1C181EBCBA007FFDF1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -144,7 +144,7 @@
 		701C3D16181EBCBA007FFDF1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */,
+				701C3D15181EBCBA007FFDF1 /* CroEvents.app */,
 				701C3D41181EBCBA007FFDF1 /* CroatianEventCalendarTests.xctest */,
 			);
 			name = Products;
@@ -306,7 +306,7 @@
 			);
 			name = CroEvents;
 			productName = CroatianEventCalendar;
-			productReference = 701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */;
+			productReference = 701C3D15181EBCBA007FFDF1 /* CroEvents.app */;
 			productType = "com.apple.product-type.application";
 		};
 		701C3D40181EBCBA007FFDF1 /* CroatianEventCalendarTests */ = {

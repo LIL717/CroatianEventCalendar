@@ -257,6 +257,7 @@
                         <outlet property="endDate" destination="nnh-WD-5gF" id="ppy-0a-2YN"/>
                         <outlet property="endDateHeight" destination="cAY-84-vUp" id="anj-F3-g9d"/>
                         <outlet property="endDateToEmailConstraint" destination="JjJ-mQ-adg" id="twM-Fh-rgl"/>
+                        <outlet property="iCalButton" destination="ZmB-l1-HJD" id="5Fa-Ri-V5k"/>
                         <outlet property="link" destination="FrQ-vg-29j" id="h0e-UX-6be"/>
                         <outlet property="linkHeight" destination="jw5-Db-O36" id="tVQ-57-nER"/>
                         <outlet property="linkToDescriptionConstraint" destination="jUV-Et-vOi" id="rk7-Vk-Gb2"/>
