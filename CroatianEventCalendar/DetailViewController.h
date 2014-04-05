@@ -27,8 +27,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *desc;
 
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *nameToLocationConstraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *locationToBeginDateConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *beginDateToEndDateConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *endDateToEmailConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *emailToPhoneConstraint;

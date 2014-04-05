@@ -146,7 +146,7 @@
 			self.locationHeight.constant = self.location.titleLabel.frame.size.height;
 		} else {
 			self.locationHeight.constant = 0;
-			self.nameToLocationConstraint.constant = 0;
+//			self.nameToLocationConstraint.constant = 0;
 		}
 		
 		[self formatDates];
@@ -457,7 +457,9 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 
 	    // Check whether we are authorized to access Calendar
     [self checkEventStoreAccessForCalendar];
-		if (self.calendarEvent.endDate) {
+//	[self askPermissionForCalendarAccess];
+	
+	if (self.calendarEvent.endDate) {
 		self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
 	} else {
 		self.calendarEvent.endDate = [self.detailItem valueForKey:@"beginDate"];  //if no endDate was entered, use begin Date for end date
@@ -482,8 +484,37 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 }
 #pragma mark -
 #pragma mark Access Calendar
+//-(void)askPermissionForCalendarAccess {
+//    /* iOS 6 requires the user grant your application access to the Event Stores */
+//    if ([self.eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)])
+//    {
+//        /* iOS Settings > Privacy > Calendars > MY APP > ENABLE | DISABLE */
+//        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+//
+//            if (granted) {
+//
+//                NSLog(@"granted");
+//                //This method checks to make sure the calendar I want exists, then move on from there...
+//                [self accessGrantedForCalendar];
+//
+//            } else {
+//
+//                //put error popup code here.
+//                NSLog(@"denied");
+//                [self performSelectorOnMainThread:@selector(showDeniedAccessAlert) withObject:nil waitUntilDone:NO];
+//            }
+//        }];
+//    }
+//}
+//-(void) showDeniedAccessAlert {
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Privacy Warning" message:@"Permission was not granted for Calendar"
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:@"OK"
+//                                                  otherButtonTitles:nil];
+//            [alert show];
+//}
 
-// Check the authorization status of our application for Calendar 
+// Check the authorization status of our application for Calendar
 -(void)checkEventStoreAccessForCalendar
 {
     EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];    
@@ -513,7 +544,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 }
 
 
-// Prompt the user for access to their Calendar
+//// Prompt the user for access to their Calendar
 -(void)requestCalendarAccess
 {
     [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error)
@@ -523,7 +554,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
              DetailViewController * __weak weakSelf = self;
              // Let's ensure that our code will be executed from the main queue
              dispatch_async(dispatch_get_main_queue(), ^{
-             // The user has granted access to their Calendar; let's populate our UI with all events occuring in the next 24 hours.
+             // The user has granted access to their Calendar
                  [weakSelf accessGrantedForCalendar];
              });
          }

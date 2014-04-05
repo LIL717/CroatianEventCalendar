@@ -84,7 +84,7 @@ int beginHour;
 	event.eventId = [NSNumber numberWithInteger:[[newEvent valueForKey: @"id"] intValue]];
 	event.name = [newEvent valueForKey: @"name"];
 			
-	NSLog(@" --------------> event is %@", event.name);
+//	NSLog(@" --------------> event is %@", event.name);
 
 	
 	event.beginDate = [self processBeginDate: newEvent];
@@ -128,7 +128,7 @@ int beginHour;
 	[comps setMonth:[[newEvent valueForKey: @"month_end"] intValue]];
 	[comps setDay:[[newEvent valueForKey: @"day_end"] intValue]];
 	
-		NSLog (@"incoming end date values %i %i %i", [[newEvent valueForKey: @"year_end"] intValue], [[newEvent valueForKey: @"month_end"] intValue], [[newEvent valueForKey: @"day_end"] intValue]);
+//		NSLog (@"incoming end date values %i %i %i", [[newEvent valueForKey: @"year_end"] intValue], [[newEvent valueForKey: @"month_end"] intValue], [[newEvent valueForKey: @"day_end"] intValue]);
 	
 	int endHour = [[newEvent valueForKey: @"hour_end"] intValue];
 	if ([[newEvent valueForKey: @"ampm_end"] isEqualToString: @"PM"]) {

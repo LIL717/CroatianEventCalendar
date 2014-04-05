@@ -11,6 +11,7 @@
 #import "EventsInCoreData.h"
 #import "Event.h"
 #import "SparkInspector.h"
+#import "MasterViewcontroller.h"
 
 // this framework was imported so we could use the kCFURLErrorNotConnectedToInternet error code
 #import <CFNetwork/CFNetwork.h>
@@ -71,20 +72,20 @@ static NSString * const kEvents = @"events";
                                                        shadow, NSShadowAttributeName,
                                                        [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:25.0], NSFontAttributeName, nil]];
 				
-//    // Override point for customization after application launch.
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-//        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-//        splitViewController.delegate = (id)navigationController.topViewController;
-//        
-//        UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-//        MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
-//        controller.managedObjectContext = self.managedObjectContext;
+    // Override point for customization after application launch.
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+        splitViewController.delegate = (id)navigationController.topViewController;
+        
+        UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
+        MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
+        controller.managedObjectContext = self.managedObjectContext;
 //    } else {
 //        UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
 //        MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
 //        controller.managedObjectContext = self.managedObjectContext;
-//    }
+    }
     // Override point for customization after application launch.
     //    [TestFlight takeOff:@"edbbcf45a655f8286ea1810a5e350c09_OTE2NjEyMDEyLTA1LTE4IDE4OjE2OjEyLjMyODAxMA"];
     //

@@ -290,9 +290,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		701C3D14181EBCBA007FFDF1 /* Events */ = {
+		701C3D14181EBCBA007FFDF1 /* CroEvents */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "Events" */;
+			buildConfigurationList = 701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "CroEvents" */;
 			buildPhases = (
 				23D1308FA44C40889280F075 /* Check Pods Manifest.lock */,
 				701C3D11181EBCBA007FFDF1 /* Sources */,
@@ -304,7 +304,7 @@
 			);
 			dependencies = (
 			);
-			name = Events;
+			name = CroEvents;
 			productName = CroatianEventCalendar;
 			productReference = 701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */;
 			productType = "com.apple.product-type.application";
@@ -354,7 +354,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				701C3D14181EBCBA007FFDF1 /* Events */,
+				701C3D14181EBCBA007FFDF1 /* CroEvents */,
 				701C3D40181EBCBA007FFDF1 /* CroatianEventCalendarTests */,
 			);
 		};
@@ -456,7 +456,7 @@
 /* Begin PBXTargetDependency section */
 		701C3D48181EBCBA007FFDF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 701C3D14181EBCBA007FFDF1 /* Events */;
+			target = 701C3D14181EBCBA007FFDF1 /* CroEvents */;
 			targetProxy = 701C3D47181EBCBA007FFDF1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -651,7 +651,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "Events" */ = {
+		701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "CroEvents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				701C3D54181EBCBB007FFDF1 /* Debug */,

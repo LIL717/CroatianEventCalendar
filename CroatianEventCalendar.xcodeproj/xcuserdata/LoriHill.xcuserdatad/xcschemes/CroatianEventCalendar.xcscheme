@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
                BuildableName = "Croatian Events.app"
-               BlueprintName = "Events"
+               BlueprintName = "CroEvents"
                ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,7 +44,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
             BuildableName = "Croatian Events.app"
-            BlueprintName = "Events"
+            BlueprintName = "CroEvents"
             ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
             BuildableName = "Croatian Events.app"
-            BlueprintName = "Events"
+            BlueprintName = "CroEvents"
             ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -81,7 +81,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
             BuildableName = "Croatian Events.app"
-            BlueprintName = "Events"
+            BlueprintName = "CroEvents"
             ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
