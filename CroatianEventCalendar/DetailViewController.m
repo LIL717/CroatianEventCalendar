@@ -14,17 +14,21 @@
 #import <OHAttributedLabel/OHASBasicHTMLParser.h>
 #import <OHAttributedLabel/OHASBasicMarkupParser.h>
 #import <EventKit/EventKit.h>
-//#import <EventKitUI/EventKitUI.h>
+#import <MapKit/MapKit.h>
+#import "Reachability.h"
 
 @interface DetailViewController ()<UIActionSheetDelegate>
-// EKEventStore instance associated with the current Calendar application
-@property (nonatomic, strong) EKEventStore *eventStore;
 
-// Default calendar associated with the above event store
-@property (nonatomic, strong) EKCalendar *defaultCalendar;
+@property (nonatomic, strong) EKEventStore *eventStore; // EKEventStore instance associated with the current Calendar application
+@property (nonatomic, strong) EKCalendar *defaultCalendar; // Default calendar associated with the above event store
 @property (nonatomic, strong) EKEvent *calendarEvent;
 @property(nonatomic, retain) NSMutableSet* visitedLinks;
+
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
+
+@property (nonatomic) Reachability *hostReachability;
+@property (nonatomic, assign) BOOL networkIsReachable;
+
 - (void)configureView;
 @end
 
@@ -50,6 +54,11 @@ int savedEndDateToEmailConstraint;
         self.visitedLinks = [NSMutableSet set];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
 }
 #pragma mark - Managing the detail item
 
@@ -127,10 +136,14 @@ int savedEndDateToEmailConstraint;
 //			NSLog (@"%@", formattedLocationString);
 			[self.location setTitle: formattedLocationString forState:UIControlStateNormal];
 			self.calendarEvent.location = formattedLocationString;
-			self.location.enabled = YES;
 			self.location.hidden = NO;
-
-
+			if (self.networkIsReachable) {
+				self.location.enabled = YES;
+				self.location.imageView.hidden = NO;
+			} else {
+				self.location.enabled = NO;
+				self.location.imageView.hidden = YES;
+			}
 
 			//autolayout is not doing this automatically so set height of button to match height of textLabel
 			self.locationHeight.constant = self.location.titleLabel.frame.size.height;
@@ -141,6 +154,12 @@ int savedEndDateToEmailConstraint;
 		} else {
 			
 			self.locationHeight.constant = 0;
+		}
+		
+		if (self.mapViewHeight.constant > 100 && self.networkIsReachable) {
+			[self displayMapWithLocation: self.location.titleLabel.text];
+		} else {
+			self.mapView.hidden = YES;
 		}
 		
 		if ([[self.detailItem valueForKey:@"beginDate"] description]) {
@@ -158,6 +177,7 @@ int savedEndDateToEmailConstraint;
 			self.emailHeight.constant = savedEmailHeight;
 			self.endDateToEmailConstraint.constant = savedEndDateToEmailConstraint;
 		} else {
+			self.email.text = @"";
 			self.emailHeight.constant = 0;
 			self.endDateToEmailConstraint.constant = 0;
 		}
@@ -170,6 +190,7 @@ int savedEndDateToEmailConstraint;
 			self.phoneHeight.constant = savedPhoneHeight;
 			self.emailToPhoneConstraint.constant = savedEmailToPhoneConstraint;
 		} else {
+			self.phone.text = @"";
 			self.phoneHeight.constant = 0;
 			self.emailToPhoneConstraint.constant = 0;
 		}
@@ -186,6 +207,7 @@ int savedEndDateToEmailConstraint;
 			self.phoneToLinkConstraint.constant = savedPhoneToLinkConstraint;
 		} else {
 //			self.link.hidden = YES;
+			self.link.text = @"";
 			self.linkHeight.constant = 0;
 			self.phoneToLinkConstraint.constant = 0;
 		}
@@ -198,6 +220,7 @@ int savedEndDateToEmailConstraint;
 			self.linkToDescriptionConstraint.constant = savedPhoneToLinkConstraint;
 			self.desc.hidden = NO;
 		} else {
+			self.desc.text = @"";
 			self.desc.hidden = YES;
 			self.linkToDescriptionConstraint.constant = 0;
 
@@ -316,15 +339,38 @@ int savedEndDateToEmailConstraint;
 //	NSLog (@"endDateHeight is %f, constraint is %f", self.endDateHeight.constant, self.beginDateToEndDateConstraint.constant);
 
 }
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"WebViewSegue"]) {
-		WebViewController *webViewController = segue.destinationViewController;
-		NSString* launchUrl = [NSString stringWithFormat:@"http://%@",[[self.detailItem valueForKey:@"link"] description]];
-        webViewController.urlObject = [NSURL URLWithString: launchUrl];
-        
-    }
+- (void ) displayMapWithLocation: (NSString *) location {
+
+		// Create and initialize a search request object.
+		MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+		request.naturalLanguageQuery = self.location.titleLabel.text;
+		request.region = self.mapView.region;
+		[self.mapView setRegion:[self.mapView regionThatFits:request.region] animated:YES];
+		 
+		// Create and initialize a search object.
+		MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+		 
+		// Start the search and display the results as annotations on the map.
+		[search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error)
+		{
+		   NSMutableArray *placemarks = [NSMutableArray array];
+		   for (MKMapItem *item in response.mapItems) {
+			  [placemarks addObject:item.placemark];
+		   }
+		   [self.mapView removeAnnotations:[self.mapView annotations]];
+		   [self.mapView showAnnotations:placemarks animated:NO];
+		   
+		if (error) {
+			self.mapView.hidden = YES;
+		} else {
+			self.mapView.hidden = NO;
+		}
+		}];
+		
 }
+#pragma mark - View handling
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -348,12 +394,19 @@ int savedEndDateToEmailConstraint;
 	savedEmailHeight = self.emailHeight.constant;
 	savedEndDateToEmailConstraint = self.endDateToEmailConstraint.constant;
 	
-//	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//		NSString *ipadImage = @"tileBackground.png";
-//		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: ipadImage]];
-//	}
 	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: @"tileBackground.png"]];
-	[self configureView];
+	self.mapView.delegate = self;
+
+     //Observe the kNetworkReachabilityChangedNotification. When that notification is posted, the method reachabilityChanged will be called.
+    
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+	//Check initial reachability
+    NSString *remoteHostName = @"www.apple.com";
+	self.hostReachability = [Reachability reachabilityWithHostname:remoteHostName];
+	[self.hostReachability startNotifier];
+	[self updateReachabilityFlag:self.hostReachability];
+	
+//	[self configureView];  initial configureView is now called in updateReachabiityFlag:
 }
 
 - (void)didReceiveMemoryWarning
@@ -438,6 +491,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
     }
 
 }
+
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet
@@ -469,6 +523,17 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
         }
     }
 }
+#pragma mark - Leaving this App
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"WebViewSegue"]) {
+		WebViewController *webViewController = segue.destinationViewController;
+		NSString* launchUrl = [NSString stringWithFormat:@"http://%@",[[self.detailItem valueForKey:@"link"] description]];
+        webViewController.urlObject = [NSURL URLWithString: launchUrl];
+        
+    }
+}
 - (IBAction)openMapWithAddress:(id)sender {
 
 	UIButton *button = (UIButton *)sender;
@@ -487,10 +552,15 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 
 - (IBAction)handleMoreButton:(id)sender {
 	
-	
-	NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
+	NSString *myURLString;
+	if ([self.link.attributedText.string length] > 0) {
+		myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
+	} else {
+		myURLString = @"";
+	}
 	NSURL *myURL = [NSURL URLWithString: myURLString];
-	NSArray *activityItems = [[NSArray alloc] initWithObjects: self.name.text, self.beginDate.text, self.location.titleLabel.text,[NSString stringWithFormat:@"%@", myURL], nil];
+	
+	NSArray *activityItems = [[NSArray alloc] initWithObjects: self.name.text, self.beginDate.text, self.location.titleLabel.text, [NSString stringWithFormat:@"%@", myURL], nil];
 		
 	NSArray * applicationActivities = nil;
 //	NSArray * excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeMessage];
@@ -618,5 +688,29 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
     self.defaultCalendar = self.eventStore.defaultCalendarForNewEvents;
 
 }
+#pragma mark -
+#pragma mark Reachability
+/*!
+ * Called by Reachability whenever status changes.
+ */
+- (void) reachabilityChanged:(NSNotification *)note
+{
+	Reachability* curReach = [note object];
+	NSParameterAssert([curReach isKindOfClass:[Reachability class]]);
+	[self updateReachabilityFlag:curReach];
+}
 
+
+- (void)updateReachabilityFlag:(Reachability *)reachability
+{
+	NetworkStatus netStatus = [reachability currentReachabilityStatus];
+
+    if (netStatus == NotReachable) {
+		self.networkIsReachable = NO;
+	} else {
+		self.networkIsReachable = YES;
+	}
+//	NSLog (@"NNNNNNNNNNNNNNNNNNNNNNNNNNetwork status bool is %hhd, status is %i", self.networkIsReachable, netStatus);
+	[self configureView];
+}
 @end

@@ -13,11 +13,10 @@
 
 #import <OHAttributedLabel/OHAttributedLabel.h>
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, OHAttributedLabelDelegate>
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, OHAttributedLabelDelegate, MKMapViewDelegate>
 
 @property (strong, nonatomic) id detailItem;
 
-@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UIButton *location;
 @property (weak, nonatomic) IBOutlet UILabel *beginDate;
@@ -27,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet OHAttributedLabel *link;
 @property (weak, nonatomic) IBOutlet UITextView *desc;
 @property (weak, nonatomic) IBOutlet UIButton *iCalButton;
+@property (strong, nonatomic) IBOutlet MKMapView *mapView;
 
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *beginDateToEndDateConstraint;
@@ -40,6 +40,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *emailHeight;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *phoneHeight;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *linkHeight;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeight;
 
 - (IBAction)openMapWithAddress:(id)sender;
 - (IBAction)handleMoreButton:(id)sender;
