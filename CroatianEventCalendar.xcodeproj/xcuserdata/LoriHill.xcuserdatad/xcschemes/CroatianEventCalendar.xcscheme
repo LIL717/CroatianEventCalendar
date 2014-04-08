@@ -15,8 +15,13 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
+<<<<<<< iPad
                BuildableName = "CroEvents.app"
                BlueprintName = "CroEvents"
+=======
+              BuildableName = "CroEvents.app"
+			  BlueprintName = "CroEvents"
+>>>>>>> local
                ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +48,13 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
+<<<<<<< iPad
             BuildableName = "CroEvents.app"
             BlueprintName = "CroEvents"
+=======
+//            BuildableName = "CroEvents.app"
+//            BlueprintName = "CroEvents"
+>>>>>>> local
             ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -62,8 +72,13 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
+<<<<<<< iPad
             BuildableName = "CroEvents.app"
             BlueprintName = "CroEvents"
+=======
+//            BuildableName = "CroEvents.app"
+//            BlueprintName = "CroEvents"
+>>>>>>> local
             ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -80,8 +95,13 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "701C3D14181EBCBA007FFDF1"
+<<<<<<< iPad
             BuildableName = "CroEvents.app"
             BlueprintName = "CroEvents"
+=======
+//            BuildableName = "CroEvents.app"
+//            BlueprintName = "CroEvents"
+>>>>>>> local
             ReferencedContainer = "container:CroatianEventCalendar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
