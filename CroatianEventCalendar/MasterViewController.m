@@ -43,8 +43,12 @@
 
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
-	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"CalendarBackgroundImage.png"]];
-	
+//	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//		NSString *ipadImage = @"tileBackground.png";
+//		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: ipadImage]];
+//	} else {
+	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tileBackground.png"]];
+//	}
 //	InsertEvents *insertEvents = [InsertEvents alloc];
 //	insertEvents.managedObjectContext = self.managedObjectContext;
 //	[insertEvents listEvents];
@@ -110,12 +114,21 @@
 	}
 	
 	cell.detailTextLabel.text = [NSString stringWithFormat: @"%@  %@", theDate, theTime];
+	cell.backgroundColor = [UIColor clearColor];
+//	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	cell.textLabel.highlightedTextColor = [UIColor blueColor];
+	cell.detailTextLabel.highlightedTextColor = [UIColor blueColor];
 	
 //	NSLog (@"textLabel %@, detailLabel %@", cell.textLabel.text, cell.detailTextLabel.text);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+		// set the alpha to half on the selected row so that the background shows through
+		UITableViewCell *cell = [UITableViewCell alloc];
+		cell = [tableView cellForRowAtIndexPath: indexPath];
+		cell.selectedBackgroundView.alpha = 0.5;
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         self.detailViewController.detailItem = object;

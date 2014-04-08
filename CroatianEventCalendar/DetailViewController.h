@@ -17,6 +17,7 @@
 
 @property (strong, nonatomic) id detailItem;
 
+@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UIButton *location;
 @property (weak, nonatomic) IBOutlet UILabel *beginDate;

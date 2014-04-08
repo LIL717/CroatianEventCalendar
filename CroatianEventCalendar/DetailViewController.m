@@ -32,7 +32,15 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma mark - Init/Dealloc
 /////////////////////////////////////////////////////////////////////////////
-
+int savedEndDateHeight;
+int savedBeginDateToEndDateConstraint;
+int savedLinkToDescriptionConstraint;
+int savedLinkHeight;
+int savedPhoneToLinkConstraint;
+int savedPhoneHeight;
+int savedEmailToPhoneConstraint;
+int savedEmailHeight;
+int savedEndDateToEmailConstraint;
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -120,14 +128,19 @@
 			[self.location setTitle: formattedLocationString forState:UIControlStateNormal];
 			self.calendarEvent.location = formattedLocationString;
 			self.location.enabled = YES;
+			self.location.hidden = NO;
 
 
 
 			//autolayout is not doing this automatically so set height of button to match height of textLabel
 			self.locationHeight.constant = self.location.titleLabel.frame.size.height;
+			// for iPad, if the height is too small the pin gets compressed, so make it at least 50 pixels high
+			if (self.locationHeight.constant < 50) {
+				self.locationHeight.constant = 50;
+				}
 		} else {
+			
 			self.locationHeight.constant = 0;
-//			self.nameToLocationConstraint.constant = 0;
 		}
 		
 		if ([[self.detailItem valueForKey:@"beginDate"] description]) {
@@ -142,6 +155,8 @@
 			self.email.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"email"] description]];
 			self.email.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.email.delegate = self; // Delegate methods are called when the user taps on a link
+			self.emailHeight.constant = savedEmailHeight;
+			self.endDateToEmailConstraint.constant = savedEndDateToEmailConstraint;
 		} else {
 			self.emailHeight.constant = 0;
 			self.endDateToEmailConstraint.constant = 0;
@@ -152,6 +167,8 @@
 			self.phone.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"phone"] description]];
 			self.phone.automaticallyAddLinksForType = NSTextCheckingTypePhoneNumber;
 			self.phone.delegate = self; // Delegate methods are called when the user taps on a link
+			self.phoneHeight.constant = savedPhoneHeight;
+			self.emailToPhoneConstraint.constant = savedEmailToPhoneConstraint;
 		} else {
 			self.phoneHeight.constant = 0;
 			self.emailToPhoneConstraint.constant = 0;
@@ -165,8 +182,10 @@
 			NSString *myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
 			NSURL *myURL = [NSURL URLWithString: myURLString];
 			self.calendarEvent.URL = myURL;
+			self.linkHeight.constant = savedLinkHeight;
+			self.phoneToLinkConstraint.constant = savedPhoneToLinkConstraint;
 		} else {
-			self.link.hidden = YES;
+//			self.link.hidden = YES;
 			self.linkHeight.constant = 0;
 			self.phoneToLinkConstraint.constant = 0;
 		}
@@ -176,9 +195,12 @@
 			//description is a textView because OHAttributedLabel can't handle more than one line of text
 			self.desc.text = [[self.detailItem valueForKey:@"desc"] description];
 			self.calendarEvent.notes = self.desc.text;
+			self.linkToDescriptionConstraint.constant = savedPhoneToLinkConstraint;
+			self.desc.hidden = NO;
 		} else {
 			self.desc.hidden = YES;
 			self.linkToDescriptionConstraint.constant = 0;
+
 		}
 
     }
@@ -207,7 +229,7 @@
 
     // Change the paragraph attributes, like textAlignment, lineBreakMode and paragraph spacing
     [attrStr modifyParagraphStylesWithBlock:^(OHParagraphStyle *paragraphStyle) {
-//        paragraphStyle.textAlignment = kCTCenterTextAlignment;
+        paragraphStyle.textAlignment = kCTCenterTextAlignment;
         paragraphStyle.lineBreakMode = kCTLineBreakByWordWrapping;
         paragraphStyle.paragraphSpacing = 8.f;
         paragraphStyle.lineSpacing = 3.f;
@@ -261,12 +283,16 @@
 	}
 		
 	self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
-
+	
+	self.endDateHeight.constant = savedEndDateHeight;
+	self.beginDateToEndDateConstraint.constant = savedBeginDateToEndDateConstraint;
+	
+	
 	if ([theEndDate isEqualToString:@""]) {		//no end date
 		if ([theEndTime isEqualToString:@""]) {  //no end date or time
 			self.endDateHeight.constant = 0;
 			self.beginDateToEndDateConstraint.constant = 0;
-			self.endDate.hidden = YES;
+//			self.endDate.hidden = YES;
 			self.beginDate.text = [NSString stringWithFormat: @"%@  %@", theBeginDate, theBeginTime];
 		} else {									//no end date, but end time so ends same day
 			self.beginDate.text = [NSString stringWithFormat: @"%@", theBeginDate];
@@ -274,7 +300,7 @@
 			self.endDate.text = [NSString stringWithFormat:@"%@ - %@", theBeginTime, theEndTime];
 		}
 	} else {									 //different dates
-			self.endDate.hidden = NO;
+//			self.endDate.hidden = NO;
 			if ([theBeginTime isEqualToString: @""]) {     //different dates but no begin time
 				self.beginDate.text = [NSString stringWithFormat: @"%@ -", theBeginDate];
 			} else {										//different dates with a time
@@ -286,6 +312,8 @@
 				self.endDate.text = [NSString stringWithFormat: @"%@  %@", theEndDate, theEndTime];
 			}
 	}
+	
+//	NSLog (@"endDateHeight is %f, constraint is %f", self.endDateHeight.constant, self.beginDateToEndDateConstraint.constant);
 
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -310,6 +338,21 @@
 	//set up the calendarEvent here, even if it doesn't get used, so that as the view is poplulated the event can be populated too
 	self.calendarEvent = [EKEvent eventWithEventStore:self.eventStore];
 		
+	savedEndDateHeight = self.endDateHeight.constant;
+	savedBeginDateToEndDateConstraint = self.beginDateToEndDateConstraint.constant;
+	savedLinkToDescriptionConstraint = self.linkToDescriptionConstraint.constant;
+	savedLinkHeight = self.linkHeight.constant;
+	savedPhoneToLinkConstraint = self.phoneToLinkConstraint.constant;
+	savedPhoneHeight = self.phoneHeight.constant;
+	savedEmailToPhoneConstraint = self.emailToPhoneConstraint.constant;
+	savedEmailHeight = self.emailHeight.constant;
+	savedEndDateToEmailConstraint = self.endDateToEmailConstraint.constant;
+	
+//	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//		NSString *ipadImage = @"tileBackground.png";
+//		self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: ipadImage]];
+//	}
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: @"tileBackground.png"]];
 	[self configureView];
 }
 

@@ -93,6 +93,7 @@ static NSString * const kEvents = @"events";
     //#ifdef TESTING
     //    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     //#endif
+	//supposedly don't need to ever use this, it will just magically be enabled if the SparkInspector app is open
 //    #define TESTING 1
 //	#ifdef TESTING
 //		[SparkInspector enableObservation];

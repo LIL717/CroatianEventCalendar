@@ -55,8 +55,17 @@ int beginHour;
 	event.location = [newEvent valueForKey: @"location"];
 	event.email = [newEvent valueForKey: @"email"];
 	event.phone = [newEvent valueForKey: @"phone"];
-	event.link = [newEvent valueForKey: @"link"];
-	event.link_name = [newEvent valueForKey: @"link_name"];
+	
+	if ([[newEvent valueForKey: @"link"] length] > 0) {
+	NSRange range = [[newEvent valueForKey: @"link"] rangeOfString:@"http://"];
+		if (range.length > 0) {
+			event.link = [[[newEvent valueForKey: @"link"] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		} else {
+			event.link = [newEvent valueForKey: @"link"];
+		}
+	}
+
+	//	event.link_name = [newEvent valueForKey: @"link_name"];
 	event.desc = [newEvent valueForKey: @"description"];
 	
 	if (![self.managedObjectContext save:&error]) {
@@ -94,15 +103,23 @@ int beginHour;
 	event.location = [newEvent valueForKey: @"location"];
 	event.email = [newEvent valueForKey: @"email"];
 	event.phone = [newEvent valueForKey: @"phone"];
-	event.link = [newEvent valueForKey: @"link"];
-	event.link_name = [newEvent valueForKey: @"link_name"];
+	
+	if ([[newEvent valueForKey: @"link"] length] > 0) {
+	NSRange range = [[newEvent valueForKey: @"link"] rangeOfString:@"http://"];
+		if (range.length > 0) {
+			event.link = [[[newEvent valueForKey: @"link"] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		} else {
+			event.link = [newEvent valueForKey: @"link"];
+		}
+	}
+
+//	event.link_name = [newEvent valueForKey: @"link_name"];
 	event.desc = [newEvent valueForKey: @"description"];
 	
 	if (![self.managedObjectContext save:&error]) {
 		NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
 	}
         
-
 }
 - (NSDate*) processBeginDate: (NSDictionary*) newEvent {
 
