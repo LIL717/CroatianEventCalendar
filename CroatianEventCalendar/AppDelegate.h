@@ -16,7 +16,6 @@
     
 @private
     NSManagedObjectContext *managedObjectContext_;
-    NSManagedObjectModel *managedObjectModel_;
     
     // for downloading the xml data
     NSURLConnection *webConnection;

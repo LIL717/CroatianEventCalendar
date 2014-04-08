@@ -125,8 +125,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 		// set the alpha to half on the selected row so that the background shows through
-		UITableViewCell *cell = [UITableViewCell alloc];
-		cell = [tableView cellForRowAtIndexPath: indexPath];
+		UITableViewCell *cell = [tableView cellForRowAtIndexPath: indexPath];
 		cell.selectedBackgroundView.alpha = 0.5;
 
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
