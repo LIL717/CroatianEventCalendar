@@ -12,6 +12,7 @@
 #import "Event.h"
 #import "SparkInspector.h"
 #import "MasterViewcontroller.h"
+#import "TestFlight.h"
 
 // this framework was imported so we could use the kCFURLErrorNotConnectedToInternet error code
 #import <CFNetwork/CFNetwork.h>
@@ -86,13 +87,14 @@ static NSString * const kEvents = @"events";
         MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
         controller.managedObjectContext = self.managedObjectContext;
     }
-    // Override point for customization after application launch.
-    //    [TestFlight takeOff:@"edbbcf45a655f8286ea1810a5e350c09_OTE2NjEyMDEyLTA1LTE4IDE4OjE2OjEyLjMyODAxMA"];
-    //
-    //#define TESTING 1
-    //#ifdef TESTING
-    //    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-    //#endif
+	
+	//Override point for customization after application launch.
+    [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
+
+//#define TESTING 1
+//#ifdef TESTING
+//    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+//#endif
 	//supposedly don't need to ever use this, it will just magically be enabled if the SparkInspector app is open
 //    #define TESTING 1
 //	#ifdef TESTING
