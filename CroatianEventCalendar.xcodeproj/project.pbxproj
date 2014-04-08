@@ -40,6 +40,11 @@
 		701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D76181EC513007FFDF1 /* EventsInCoreData.m */; };
 		701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D79181EE0A4007FFDF1 /* Event.m */; };
 		708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */ = {isa = PBXBuildFile; fileRef = 708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */; };
+		709E041B18F3AA74007165D6 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 709E041518F3AA73007165D6 /* libTestFlight.a */; };
+		709E041C18F3AA74007165D6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 709E041618F3AA73007165D6 /* README.md */; };
+		709E041D18F3AA74007165D6 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 709E041718F3AA73007165D6 /* release_notes.md */; };
+		709E041F18F3AB17007165D6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 709E041E18F3AB17007165D6 /* libz.dylib */; };
+		709E042118F3D150007165D6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 709E042018F3D150007165D6 /* Podfile */; };
 		70DE19DF18E7833100885F07 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70DE19DE18E7833000885F07 /* WebViewController.m */; };
 		AEDD208D83094A298D8F796F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2DD2203D60C4AD9891F1A2E /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -55,7 +60,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CroatianEventCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		701C3D15181EBCBA007FFDF1 /* CroEvents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CroEvents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		701C3D18181EBCBA007FFDF1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		701C3D1A181EBCBA007FFDF1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		701C3D1C181EBCBA007FFDF1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -97,6 +102,14 @@
 		701C3D79181EE0A4007FFDF1 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		708BDB6018E9E63600077A0A /* UIAlertView+Commodity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Commodity.h"; sourceTree = "<group>"; };
 		708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Commodity.m"; sourceTree = "<group>"; };
+		709E041518F3AA73007165D6 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		709E041618F3AA73007165D6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		709E041718F3AA73007165D6 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		709E041818F3AA73007165D6 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		709E041918F3AA73007165D6 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		709E041A18F3AA73007165D6 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		709E041E18F3AB17007165D6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		709E042018F3D150007165D6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		70DE19DD18E7833000885F07 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		70DE19DE18E7833000885F07 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		9D9E8F0AB15842239F7E262D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -108,9 +121,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				709E041F18F3AB17007165D6 /* libz.dylib in Frameworks */,
 				701C3D1B181EBCBA007FFDF1 /* CoreGraphics.framework in Frameworks */,
 				701C3D1F181EBCBA007FFDF1 /* CoreData.framework in Frameworks */,
 				701C3D1D181EBCBA007FFDF1 /* UIKit.framework in Frameworks */,
+				709E041B18F3AA74007165D6 /* libTestFlight.a in Frameworks */,
 				701C3D19181EBCBA007FFDF1 /* Foundation.framework in Frameworks */,
 				AEDD208D83094A298D8F796F /* libPods.a in Frameworks */,
 			);
@@ -144,7 +159,7 @@
 		701C3D16181EBCBA007FFDF1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */,
+				701C3D15181EBCBA007FFDF1 /* CroEvents.app */,
 				701C3D41181EBCBA007FFDF1 /* CroatianEventCalendarTests.xctest */,
 			);
 			name = Products;
@@ -153,12 +168,14 @@
 		701C3D17181EBCBA007FFDF1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				709E041E18F3AB17007165D6 /* libz.dylib */,
 				701C3D18181EBCBA007FFDF1 /* Foundation.framework */,
 				701C3D1A181EBCBA007FFDF1 /* CoreGraphics.framework */,
 				701C3D1C181EBCBA007FFDF1 /* UIKit.framework */,
 				701C3D1E181EBCBA007FFDF1 /* CoreData.framework */,
 				701C3D42181EBCBA007FFDF1 /* XCTest.framework */,
 				E2DD2203D60C4AD9891F1A2E /* libPods.a */,
+				709E042018F3D150007165D6 /* Podfile */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -166,6 +183,7 @@
 		701C3D20181EBCBA007FFDF1 /* CroatianEventCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				709E041418F3AA73007165D6 /* TestFlightSDK3-2 */,
 				708BDB6418E9E67A00077A0A /* Classes */,
 				701C3D29181EBCBA007FFDF1 /* AppDelegate.h */,
 				701C3D2A181EBCBA007FFDF1 /* AppDelegate.m */,
@@ -287,12 +305,25 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		709E041418F3AA73007165D6 /* TestFlightSDK3-2 */ = {
+			isa = PBXGroup;
+			children = (
+				709E041518F3AA73007165D6 /* libTestFlight.a */,
+				709E041618F3AA73007165D6 /* README.md */,
+				709E041718F3AA73007165D6 /* release_notes.md */,
+				709E041818F3AA73007165D6 /* TestFlight+AsyncLogging.h */,
+				709E041918F3AA73007165D6 /* TestFlight+ManualSessions.h */,
+				709E041A18F3AA73007165D6 /* TestFlight.h */,
+			);
+			path = "TestFlightSDK3-2";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		701C3D14181EBCBA007FFDF1 /* Events */ = {
+		701C3D14181EBCBA007FFDF1 /* CroEvents */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "Events" */;
+			buildConfigurationList = 701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "CroEvents" */;
 			buildPhases = (
 				23D1308FA44C40889280F075 /* Check Pods Manifest.lock */,
 				701C3D11181EBCBA007FFDF1 /* Sources */,
@@ -304,9 +335,9 @@
 			);
 			dependencies = (
 			);
-			name = Events;
+			name = CroEvents;
 			productName = CroatianEventCalendar;
-			productReference = 701C3D15181EBCBA007FFDF1 /* CroatianEventCalendar.app */;
+			productReference = 701C3D15181EBCBA007FFDF1 /* CroEvents.app */;
 			productType = "com.apple.product-type.application";
 		};
 		701C3D40181EBCBA007FFDF1 /* CroatianEventCalendarTests */ = {
@@ -354,7 +385,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				701C3D14181EBCBA007FFDF1 /* Events */,
+				701C3D14181EBCBA007FFDF1 /* CroEvents */,
 				701C3D40181EBCBA007FFDF1 /* CroatianEventCalendarTests */,
 			);
 		};
@@ -365,6 +396,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				709E042118F3D150007165D6 /* Podfile in Resources */,
 				701C3D69181EBD3E007FFDF1 /* AppIcon60x60@2x.png in Resources */,
 				701C3D31181EBCBA007FFDF1 /* Main_iPad.storyboard in Resources */,
 				701C3D3C181EBCBA007FFDF1 /* Images.xcassets in Resources */,
@@ -373,10 +405,12 @@
 				701C3D6A181EBD3E007FFDF1 /* AppIcon76x76.png in Resources */,
 				701C3D68181EBD3E007FFDF1 /* AppIcon60x60.png in Resources */,
 				701C3D6C181EBD3E007FFDF1 /* iTunesArtwork.png in Resources */,
+				709E041D18F3AA74007165D6 /* release_notes.md in Resources */,
 				701C3D2E181EBCBA007FFDF1 /* Main_iPhone.storyboard in Resources */,
 				701C3D6D181EBD3E007FFDF1 /* iTunesArtwork@2x.png in Resources */,
 				701C3D6B181EBD3E007FFDF1 /* AppIcon76x76@2x.png in Resources */,
 				701C3D65181EBD3E007FFDF1 /* AppIcon29x29@2x.png in Resources */,
+				709E041C18F3AA74007165D6 /* README.md in Resources */,
 				701C3D25181EBCBA007FFDF1 /* InfoPlist.strings in Resources */,
 				701C3D66181EBD3E007FFDF1 /* AppIcon40x40.png in Resources */,
 			);
@@ -456,7 +490,7 @@
 /* Begin PBXTargetDependency section */
 		701C3D48181EBCBA007FFDF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 701C3D14181EBCBA007FFDF1 /* Events */;
+			target = 701C3D14181EBCBA007FFDF1 /* CroEvents */;
 			targetProxy = 701C3D47181EBCBA007FFDF1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -579,6 +613,10 @@
 				GCC_PREFIX_HEADER = "CroatianEventCalendar/CroatianEventCalendar-Prefix.pch";
 				INFOPLIST_FILE = "CroatianEventCalendar/CroatianEventCalendar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CroatianEventCalendar/TestFlightSDK3-2",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -594,6 +632,10 @@
 				GCC_PREFIX_HEADER = "CroatianEventCalendar/CroatianEventCalendar-Prefix.pch";
 				INFOPLIST_FILE = "CroatianEventCalendar/CroatianEventCalendar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CroatianEventCalendar/TestFlightSDK3-2",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -602,7 +644,7 @@
 		701C3D57181EBCBB007FFDF1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CroatianEventCalendar.app/CroatianEventCalendar";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CroEvents.app/CroEvents";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -624,7 +666,7 @@
 		701C3D58181EBCBB007FFDF1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CroatianEventCalendar.app/CroatianEventCalendar";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CroEvents.app/CroEvents";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -651,7 +693,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "Events" */ = {
+		701C3D53181EBCBB007FFDF1 /* Build configuration list for PBXNativeTarget "CroEvents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				701C3D54181EBCBB007FFDF1 /* Debug */,
