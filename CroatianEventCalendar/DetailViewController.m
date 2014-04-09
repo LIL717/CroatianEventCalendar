@@ -196,6 +196,7 @@ int savedEndDateToEmailConstraint;
 		}
 
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"link"] description]];
+		NSLog (@" link issssssssss %@", [self.detailItem valueForKey: @"link"]);
 		if (dataInItem) {
 			self.link.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"link"] description]];
 			self.link.automaticallyAddLinksForType = NSTextCheckingTypeLink;
