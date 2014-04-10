@@ -339,6 +339,7 @@ int savedEndDateToEmailConstraint;
 			self.beginDateToEndDateConstraint.constant = 0;
 //			self.endDate.hidden = YES;
 			self.beginDate.text = [NSString stringWithFormat: @"%@  %@", theBeginDate, theBeginTime];
+			self.endDate.text = @"";
 		} else {									//no end date, but end time so ends same day
 			self.beginDate.text = [NSString stringWithFormat: @"%@", theBeginDate];
 			self.beginDateToEndDateConstraint.constant = 2;
