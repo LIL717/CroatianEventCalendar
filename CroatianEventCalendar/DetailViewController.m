@@ -137,7 +137,7 @@ int savedEndDateToEmailConstraint;
 			}
 //			NSLog (@"%@", formattedLocationString);
 			[self.location setTitle: formattedLocationString forState:UIControlStateNormal];
-//			self.calendarEvent.location = formattedLocationString;
+			self.calendarEvent.location = formattedLocationString;
 			self.location.hidden = NO;
 			if (self.networkIsReachable) {
 				self.location.enabled = YES;
@@ -145,6 +145,7 @@ int savedEndDateToEmailConstraint;
 			} else {
 				self.location.enabled = NO;
 				self.location.imageView.hidden = YES;
+				[self.location setTitle: formattedLocationString forState:UIControlStateDisabled];
 			}
 
 			//autolayout is not doing this automatically so set height of button to match height of textLabel
