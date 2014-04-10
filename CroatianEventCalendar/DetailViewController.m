@@ -563,7 +563,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 	}
 	NSURL *myURL = [NSURL URLWithString: myURLString];
 	
-	NSArray *activityItems = [[NSArray alloc] initWithObjects: self.name.text, self.beginDate.text, self.location.titleLabel.text, [NSString stringWithFormat:@"%@", myURL], nil];
+	NSArray *activityItems = [[NSArray alloc] initWithObjects: self.name.text, self.beginDate.text, self.endDate.text, self.location.titleLabel.text, [NSString stringWithFormat:@"%@", myURL], nil];
 		
 	NSArray * applicationActivities = nil;
 //	NSArray * excludeActivities = @[UIActivityTypeAssignToContact, UIActivityTypeCopyToPasteboard, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeMessage];
@@ -575,37 +575,33 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 	[self presentViewController:activityViewController animated:YES completion:nil];
 
 }
+#pragma mark -
+#pragma mark Access Calendar
 - (IBAction)addToiCal:(id)sender {
 
 	    // Check whether we are authorized to access Calendar
-//    [self checkEventStoreAccessForCalendar];
-	if (self.calendarEvent.endDate) {
-		self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
-	} else {
-		self.calendarEvent.endDate = [self.detailItem valueForKey:@"beginDate"];  //if no endDate was entered, use begin Date for end date
-	}
-	
-	
 
 	[self setEvent: self.calendarEvent
 			withResecheduling:NO completion:^{
-				NSLog(@"The task is complete");
-    }];
-
+			NSLog (@"done adding event");
+	}];
+//											// Remove progress window
+//					[MBProgressHUD hideHUDForView:self.view animated:YES];
 }
+
 -(void)setEvent:(EKEvent *) buildEvent withResecheduling:(BOOL)rescheduling completion:(void (^)(void))completionBlock
 {
- // Show progress window
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = @"Adding event to calendar...";
-
-//    [[BusyIndicator sharedInstance] startIndicator];
 	
     EKEventStore* store = [[EKEventStore alloc] init];
 
     [store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
         if (!granted)
         {
+			NSLog (@"Not granted");
+			dispatch_async(dispatch_get_main_queue(), ^{
+			UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"Calendar Error" message:@"Unable to add event to calendar - change calendar access in privacy settings" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                        [alert show];
+			});
             return;
         }
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -615,6 +611,8 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
                     event.endDate = buildEvent.endDate;
 					event.location = buildEvent.location;
 					event.URL = buildEvent.URL;
+					event.notes = buildEvent.notes;
+					event.allDay = buildEvent.allDay;
                     [event setCalendar:[store defaultCalendarForNewEvents]];
                     NSError *err = nil;
                     [store saveEvent:event span:EKSpanThisEvent commit:YES error:&err];
@@ -624,248 +622,22 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
                         NSString* msg;
                         if (err) {
 							alertTitle = @"Calendar Error";
-							if (err.code == 1) {
-								msg = [NSString stringWithFormat: @"Unable to add event to calendar - change calendar access in privacy settings"];
-							} else {
-								msg = [NSString stringWithFormat: @"Unable to add event to calendar. %@", err.localizedDescription];
-							}
-                        }
-                        else
-                        {
-                            alertTitle = title;
+							msg = [NSString stringWithFormat: @"Unable to add event to calendar. %@", err.localizedDescription];
+                        } else {
+                            alertTitle = buildEvent.title;
                             msg = @"Event successfully added to calendar.";
                         }
                         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:alertTitle message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                         [alert show];
                     }
 
-//                    [[BusyIndicator sharedInstance] stopIndicator];
-					// Remove progress window
-					[MBProgressHUD hideHUDForView:self.view animated:YES];
-                    completionBlock();
         });
 
 
     }];
+
 }
 
-//	[self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error)
-//	{
-//		if (granted) // user user is ok with it
-//		{
-//				    // Let's get the default calendar associated with our event store
-//			self.defaultCalendar = self.eventStore.defaultCalendarForNewEvents;
-//			if (self.calendarEvent.endDate) {
-//				self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
-//			} else {
-//				self.calendarEvent.endDate = [self.detailItem valueForKey:@"beginDate"];  //if no endDate was entered, use begin Date for end date
-//			}
-//			[self.calendarEvent setCalendar: self.defaultCalendar];
-//			NSError *err = nil;
-//			[self.eventStore saveEvent:self.calendarEvent span:EKSpanThisEvent commit:YES error:&err];
-//			
-////			self.eventTitle = self.calendarEvent.title;
-//			NSLog (@" error code is %@", err);
-//
-//			if (err) {
-//				if (err.code == 1) {
-//					self.eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - change calendar access in privacy settings"];
-//				} else {
-//					self.eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - code %@", err];
-//				}
-//			} else {
-//				self.eventAddedMessage = @"Event successfully added to calendar";
-//			}
-//
-//				
-//		}
-//	}];
-//		if (self.eventAddedMessage) {
-//			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.calendarEvent.title message:self.eventAddedMessage
-//																   delegate:nil
-//														  cancelButtonTitle:@"OK"
-//														  otherButtonTitles:nil];
-//			[alert show];
-//		}
-//	[self askPermissionForCalendarAccess];
-	
-//	if (self.calendarEvent.endDate) {
-//		self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
-//	} else {
-//		self.calendarEvent.endDate = [self.detailItem valueForKey:@"beginDate"];  //if no endDate was entered, use begin Date for end date
-//	}
-//	[self.calendarEvent setCalendar: self.defaultCalendar];
-//	NSError *err = nil;
-//	[self.eventStore saveEvent:self.calendarEvent span:EKSpanThisEvent commit:YES error:&err];
-//	
-//	NSString *eventTitle = self.calendarEvent.title;
-//	NSString *eventAddedMessage;
-//	if (err) {
-//		if (err.code == 1) {
-//			eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - change calendar access in privacy settings"];
-//		} else {
-//			eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - code %@", err];
-//		}
-//	} else {
-//		eventAddedMessage = @"Event successfully added to calendar";
-//	}
-//	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:eventTitle message:eventAddedMessage
-//                                                           delegate:nil
-//                                                  cancelButtonTitle:@"OK"
-//                                                  otherButtonTitles:nil];
-//	[alert show];
-
-//}
-#pragma mark -
-#pragma mark Access Calendar
-//-(void)askPermissionForCalendarAccess {
-//    /* iOS 6 requires the user grant your application access to the Event Stores */
-//    if ([self.eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)])
-//    {
-//        /* iOS Settings > Privacy > Calendars > MY APP > ENABLE | DISABLE */
-//        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
-//
-//            if (granted) {
-//
-//                NSLog(@"granted");
-//                //This method checks to make sure the calendar I want exists, then move on from there...
-//                [self accessGrantedForCalendar];
-//
-//            } else {
-//
-//                //put error popup code here.
-//                NSLog(@"denied");
-//                [self performSelectorOnMainThread:@selector(showDeniedAccessAlert) withObject:nil waitUntilDone:NO];
-//            }
-//        }];
-//    }
-//}
-//-(void) showDeniedAccessAlert {
-//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Privacy Warning" message:@"Permission was not granted for Calendar"
-//                                                           delegate:nil
-//                                                  cancelButtonTitle:@"OK"
-//                                                  otherButtonTitles:nil];
-//            [alert show];
-//}
-
-//// Check the authorization status of our application for Calendar
-//-(void)checkEventStoreAccessForCalendar
-//{
-//
-//	[self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error)
-//	{
-//		if (granted) // user user is ok with it
-//		{
-//				    // Let's get the default calendar associated with our event store
-//			self.defaultCalendar = self.eventStore.defaultCalendarForNewEvents;
-//			if (self.calendarEvent.endDate) {
-//				self.calendarEvent.endDate = [self.detailItem valueForKey:@"endDate"];  //NSDate
-//			} else {
-//				self.calendarEvent.endDate = [self.detailItem valueForKey:@"beginDate"];  //if no endDate was entered, use begin Date for end date
-//			}
-//			[self.calendarEvent setCalendar: self.defaultCalendar];
-//			NSError *err = nil;
-//			[self.eventStore saveEvent:self.calendarEvent span:EKSpanThisEvent commit:YES error:&err];
-//			
-////			self.eventTitle = self.calendarEvent.title;
-//			NSLog (@" error code is %@", err);
-//
-//			if (err) {
-//				if (err.code == 1) {
-//					self.eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - change calendar access in privacy settings"];
-//				} else {
-//					self.eventAddedMessage = [NSString stringWithFormat: @"Unable to add event to calendar - code %@", err.localizedDescription];
-//				}
-//			} else {
-//				self.eventAddedMessage = @"Event successfully added to calendar";
-//			}
-//
-//				
-//		} else {
-//			NSLog (@"access NOT granted");
-//		}
-//	}];
-//
-//
-//}
-
-
-
-//        // iOS 6 and later
-//        // This line asks user's permission to access his calendar
-//        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error)
-//        {
-//            if (granted) // user user is ok with it
-//            {
-//				    // Let's get the default calendar associated with our event store
-//				self.defaultCalendar = self.eventStore.defaultCalendarForNewEvents;
-//            }
-////            else // if he does not allow 
-////            {
-//////				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Privacy Warning" message:@"Permission was not granted for Calendar"
-//////                                                           delegate:nil
-//////                                                  cancelButtonTitle:@"OK"
-//////                                                  otherButtonTitles:nil];
-////			[[[UIAlertView alloc]initWithTitle:nil message:@"Privacy warning" delegate:nil cancelButtonTitle:NSLocalizedString(@"plzAlowCalendar", nil)  otherButtonTitles: nil] show];
-////
-////                return;
-////            }
-//        }];
-//		
-//}
-
-//    EKAuthorizationStatus status = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent];    
-// 
-//    switch (status)
-//    {
-//        // Update our UI if the user has granted access to their Calendar
-//        case EKAuthorizationStatusAuthorized: [self accessGrantedForCalendar];
-//            break;
-//        // Prompt the user for access to Calendar if there is no definitive answer
-//        case EKAuthorizationStatusNotDetermined: [self requestCalendarAccess];
-//            break;
-//        // Display a message if the user has denied or restricted access to Calendar
-//        case EKAuthorizationStatusDenied:
-//        case EKAuthorizationStatusRestricted:
-//        {
-//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Privacy Warning" message:@"Permission was not granted for Calendar"
-//                                                           delegate:nil
-//                                                  cancelButtonTitle:@"OK"
-//                                                  otherButtonTitles:nil];
-//            [alert show];
-//        }
-//            break;
-//        default:
-//            break;
-//    }
-//}
-
-//
-////// Prompt the user for access to their Calendar
-//-(void)requestCalendarAccess
-//{
-//    [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error)
-//    {
-//         if (granted)
-//         {
-//             DetailViewController * __weak weakSelf = self;
-//             // Let's ensure that our code will be executed from the main queue
-//             dispatch_async(dispatch_get_main_queue(), ^{
-//             // The user has granted access to their Calendar
-//                 [weakSelf accessGrantedForCalendar];
-//             });
-//         }
-//     }];
-//}
-//
-//
-//// This method is called when the user has granted permission to Calendar
-//-(void)accessGrantedForCalendar
-//{
-//    // Let's get the default calendar associated with our event store
-//    self.defaultCalendar = self.eventStore.defaultCalendarForNewEvents;
-//
-//}
 #pragma mark -
 #pragma mark Reachability
 /*!
