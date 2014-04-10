@@ -102,13 +102,12 @@ int beginHour;
 	event.location = [newEvent valueForKey: @"location"];
 	event.email = [newEvent valueForKey: @"email"];
 	event.phone = [newEvent valueForKey: @"phone"];
+	event.link = [newEvent valueForKey: @"link"];
 	
 	if ([[newEvent valueForKey: @"link"] length] > 0) {
 	NSRange range = [[newEvent valueForKey: @"link"] rangeOfString:@"http://"];
 		if (range.length > 0) {
 			event.link = [[[newEvent valueForKey: @"link"] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		} else {
-			event.link = [newEvent valueForKey: @"link"];
 		}
 	}
 
