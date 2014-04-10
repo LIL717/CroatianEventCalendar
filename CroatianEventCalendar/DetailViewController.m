@@ -174,6 +174,10 @@ int savedEndDateToEmailConstraint;
 		if (dataInItem) {
 //			NSLog (@" email is %@",[[self.detailItem valueForKey:@"email"] description]);
 			self.email.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"email"] description]];
+#define TESTING 1
+#ifdef TESTING
+			self.email.attributedText = [self buildAttributedString: @"lhill7@me.com"];
+#endif
 			self.email.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.email.delegate = self; // Delegate methods are called when the user taps on a link
 			self.emailHeight.constant = savedEmailHeight;
@@ -187,6 +191,10 @@ int savedEndDateToEmailConstraint;
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"phone"] description]];
 		if (dataInItem) {
 			self.phone.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"phone"] description]];
+#define TESTING 1
+#ifdef TESTING
+			self.phone.attributedText = [self buildAttributedString: @"425-681-1858"];
+#endif
 			self.phone.automaticallyAddLinksForType = NSTextCheckingTypePhoneNumber;
 			self.phone.delegate = self; // Delegate methods are called when the user taps on a link
 			self.phoneHeight.constant = savedPhoneHeight;
