@@ -190,13 +190,23 @@ int savedEndDateToEmailConstraint;
 		
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"phone"] description]];
 		if (dataInItem) {
+			// check if device can make calls, if not disable
+				// phone interface
+			NSString *testPhoneNumber = [@"tel:" stringByAppendingString:[[self.detailItem valueForKey:@"phone"] description]];
+			NSURL *fakeURL = [NSURL URLWithString:testPhoneNumber];
+
+			if([[UIApplication sharedApplication] canOpenURL:fakeURL]) {
+				self.phone.delegate = self; // Delegate methods are called when the user taps on a link
+			} else {
+				self.phone.delegate = nil; // do nothing if tap on phone number
+			}
+
 			self.phone.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"phone"] description]];
 #define TESTING 1
 #ifdef TESTING
 			self.phone.attributedText = [self buildAttributedString: @"425-681-1858"];
 #endif
 			self.phone.automaticallyAddLinksForType = NSTextCheckingTypePhoneNumber;
-			self.phone.delegate = self; // Delegate methods are called when the user taps on a link
 			self.phoneHeight.constant = savedPhoneHeight;
 			self.emailToPhoneConstraint.constant = savedEmailToPhoneConstraint;
 		} else {
@@ -469,7 +479,8 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 	[self.visitedLinks addObject:objectForLinkInfo(linkInfo)];
 	[attributedLabel setNeedsRecomputeLinksInText];
 	
-	if (linkInfo.resultType ==NSTextCheckingTypePhoneNumber ) {
+	if (linkInfo.resultType == NSTextCheckingTypePhoneNumber ) {
+			
 				[[[UIActionSheet alloc] initWithTitle: linkInfo.phoneNumber
 								  delegate:self
 						 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
