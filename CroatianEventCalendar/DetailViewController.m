@@ -216,7 +216,7 @@ int savedEndDateToEmailConstraint;
 		}
 
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"link"] description]];
-		NSLog (@" link issssssssss %@", [self.detailItem valueForKey: @"link"]);
+//		NSLog (@" link issssssssss %@", [self.detailItem valueForKey: @"link"]);
 		if (dataInItem) {
 			self.link.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"link"] description]];
 			self.link.automaticallyAddLinksForType = NSTextCheckingTypeLink;
@@ -420,7 +420,10 @@ int savedEndDateToEmailConstraint;
 
      //Observe the kNetworkReachabilityChangedNotification. When that notification is posted, the method reachabilityChanged will be called.
     
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											selector:@selector(reachabilityChanged:)
+											name:kReachabilityChangedNotification
+											object:nil];
 	//Check initial reachability
     NSString *remoteHostName = @"www.apple.com";
 	self.hostReachability = [Reachability reachabilityWithHostname:remoteHostName];
@@ -656,7 +659,6 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
     }];
 
 }
-
 #pragma mark -
 #pragma mark Reachability
 /*!
@@ -679,7 +681,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 	} else {
 		self.networkIsReachable = YES;
 	}
-	NSLog (@"NNNNNNNNNNNNNNNNNNNNNNNNNNetwork status bool is %hhd, status is %i", self.networkIsReachable, netStatus);
+//	NSLog (@"NNNNNNNNNNNNNNNNNNNNNNNNNNetwork status bool is %hhd, status is %i", self.networkIsReachable, netStatus);
 	[self configureView];
 }
 @end
