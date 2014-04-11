@@ -30,7 +30,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="5" shouldIndentWhileEditing="NO" reuseIdentifier="Cell" textLabel="zuz-Lc-rrc" detailTextLabel="P9w-P8-2Ni" style="IBUITableViewCellStyleSubtitle" id="Dgh-ae-MCJ">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="Cell" textLabel="zuz-Lc-rrc" detailTextLabel="P9w-P8-2Ni" style="IBUITableViewCellStyleSubtitle" id="Dgh-ae-MCJ">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="Cell" tableViewCell="Dgh-ae-MCJ" id="cT4-cW-4CV">
@@ -38,14 +38,14 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zuz-Lc-rrc">
-                                            <rect key="frame" x="20" y="3" width="34" height="22"/>
+                                            <rect key="frame" x="25" y="3" width="34" height="22"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="P9w-P8-2Ni">
-                                            <rect key="frame" x="20" y="25" width="43" height="15"/>
+                                            <rect key="frame" x="25" y="25" width="43" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -257,44 +257,11 @@
                         <outlet property="phone" destination="cMu-QR-pa0" id="S6Q-Rf-imd"/>
                         <outlet property="phoneHeight" destination="Ler-hq-ZVA" id="J7L-dl-ZIx"/>
                         <outlet property="phoneToLinkConstraint" destination="jbL-oM-A6e" id="H7I-t4-mj0"/>
-                        <segue destination="JgJ-nf-8zy" kind="push" identifier="WebViewSegue" id="fFK-hx-xG6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lrm-kH-fPn" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="842" y="69"/>
-        </scene>
-        <!--Web View Controller-->
-        <scene sceneID="TIK-L8-oJs">
-            <objects>
-                <viewController id="JgJ-nf-8zy" customClass="WebViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="d1n-jK-qrS"/>
-                        <viewControllerLayoutGuide type="bottom" id="uCQ-85-cCX"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="qK7-fO-msP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aC0-q0-txI">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <outlet property="delegate" destination="JgJ-nf-8zy" id="evd-ah-x2F"/>
-                                </connections>
-                            </webView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="m8K-ns-H1o"/>
-                    <connections>
-                        <outlet property="webView" destination="aC0-q0-txI" id="env-F9-37S"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gNt-KI-T5Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1262" y="64"/>
         </scene>
     </scenes>
     <resources>

@@ -43,11 +43,7 @@
 
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
-//	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//		NSString *ipadImage = @"tileBackground.png";
-//		self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: ipadImage]];
-//	} else {
-	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tileBackground.png"]];
+	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tileBackground"]];
 //	}
 //	InsertEvents *insertEvents = [InsertEvents alloc];
 //	insertEvents.managedObjectContext = self.managedObjectContext;

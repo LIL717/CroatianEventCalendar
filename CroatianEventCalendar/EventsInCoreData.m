@@ -43,10 +43,10 @@ int beginHour;
 	}
 	
 	Event *event = [NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
-
-	[self formatEvent: event withNewEvent: newEvent];
+	
 	//add date separately because it's already been formatted for addEvent
 	event.beginDate = date;
+	[self formatEvent: event withNewEvent: newEvent];
 	
 	if (![self.managedObjectContext save:&error]) {
 		NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
@@ -70,10 +70,10 @@ int beginHour;
 
     // insert the events into Core Data
 	
-	[self formatEvent: event withNewEvent: newEvent];
-	//add date separately because it's already been formatted for addEvent and needs to be formatted for updateEvent
+	//add date separately because it's already been formatted for addEvent and needs to be formatted for updateEvent, also needs to be done before endDate because blank endDate is set to beginDate
 	event.beginDate = [self processBeginDate: newEvent];
-	
+	[self formatEvent: event withNewEvent: newEvent];
+
 	if (![self.managedObjectContext save:&error]) {
 		NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
 	}

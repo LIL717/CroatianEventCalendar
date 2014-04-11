@@ -91,15 +91,6 @@ static NSString * const kEvents = @"events";
 	//Override point for customization after application launch.
     [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
 
-//#define TESTING 1
-//#ifdef TESTING
-//    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-//#endif
-	//supposedly don't need to ever use this, it will just magically be enabled if the SparkInspector app is open
-//    #define TESTING 1
-//	#ifdef TESTING
-//		[SparkInspector enableObservation];
-//	#endif
     [self setUpURLConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self

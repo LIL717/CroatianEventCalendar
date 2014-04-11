@@ -16,7 +16,6 @@
 #import <EventKit/EventKit.h>
 #import <MapKit/MapKit.h>
 #import "Reachability.h"
-#import "MBProgressHUD.h"
 
 @interface DetailViewController ()<UIActionSheetDelegate>
 
@@ -182,7 +181,7 @@ int savedEndDateToEmailConstraint;
 			self.email.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"email"] description]];
 #define TESTING 1
 #ifdef TESTING
-			self.email.attributedText = [self buildAttributedString: @"lhill7@me.com"];
+			self.email.attributedText = [self buildAttributedString: @"calendar@croatiafest.org"];
 #endif
 			self.email.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.email.delegate = self; // Delegate methods are called when the user taps on a link
@@ -222,7 +221,7 @@ int savedEndDateToEmailConstraint;
 		}
 
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"link"] description]];
-		NSLog (@" link issssssssss %@", [self.detailItem valueForKey: @"link"]);
+//		NSLog (@" link issssssssss %@", [self.detailItem valueForKey: @"link"]);
 		if (dataInItem) {
 			self.link.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"link"] description]];
 			self.link.automaticallyAddLinksForType = NSTextCheckingTypeLink;
@@ -422,7 +421,7 @@ int savedEndDateToEmailConstraint;
 	savedEmailHeight = self.emailHeight.constant;
 	savedEndDateToEmailConstraint = self.endDateToEmailConstraint.constant;
 	
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: @"tileBackground.png"]];
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: @"tileBackground"]];
 	self.mapView.delegate = self;
 
      //Observe the kNetworkReachabilityChangedNotification. When that notification is posted, the method reachabilityChanged will be called.
@@ -557,15 +556,15 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 }
 #pragma mark - Leaving this App
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"WebViewSegue"]) {
-		WebViewController *webViewController = segue.destinationViewController;
-		NSString* launchUrl = [NSString stringWithFormat:@"http://%@",[[self.detailItem valueForKey:@"link"] description]];
-        webViewController.urlObject = [NSURL URLWithString: launchUrl];
-        
-    }
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    if ([[segue identifier] isEqualToString:@"WebViewSegue"]) {
+//		WebViewController *webViewController = segue.destinationViewController;
+//		NSString* launchUrl = [NSString stringWithFormat:@"http://%@",[[self.detailItem valueForKey:@"link"] description]];
+//        webViewController.urlObject = [NSURL URLWithString: launchUrl];
+//        
+//    }
+//}
 - (IBAction)openMapWithAddress:(id)sender {
 
 	UIButton *button = (UIButton *)sender;

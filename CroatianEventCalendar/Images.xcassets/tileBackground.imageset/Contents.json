@@ -1,27 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "iphone",
-      "scale" : "1x",
-      "filename" : "tileBackground.png"
-    },
-    {
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "filename" : "tileBackground@2x.png"
-    },
-    {
-      "idiom" : "iphone",
-      "subtype" : "retina4",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "ipad",
+      "idiom" : "universal",
       "scale" : "1x",
       "filename" : "tileBackground-1.png"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "universal",
       "scale" : "2x",
       "filename" : "tileBackground@2x-1.png"
     }

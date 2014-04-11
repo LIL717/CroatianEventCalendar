@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Lori Hill. All rights reserved.
 //
 
-@import UIKit;
 @import MessageUI;
 
 @class AppDelegate;
