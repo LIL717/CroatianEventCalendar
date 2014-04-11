@@ -608,16 +608,22 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 #pragma mark Access Calendar
 - (IBAction)addToiCal:(id)sender {
 
-	    // Check whether we are authorized to access Calendar
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle: self.name.text message:@"will be added to iPhone calendar" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    // optional - add more buttons:
+//    [alert addButtonWithTitle:@"OK"];
+    [alert show];
 
-	[self setEvent: self.calendarEvent
-			withResecheduling:NO completion:^{
-			NSLog (@"done adding event");
-	}];
-//											// Remove progress window
-//					[MBProgressHUD hideHUDForView:self.view animated:YES];
 }
-
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+	
+		// Check whether we are authorized to access Calendar
+		[self setEvent: self.calendarEvent
+				withResecheduling:NO completion:^{
+				NSLog (@"done adding event");
+		}];
+    }
+}
 -(void)setEvent:(EKEvent *) buildEvent withResecheduling:(BOOL)rescheduling completion:(void (^)(void))completionBlock
 {
 	
@@ -691,7 +697,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 //	NSLog (@"NNNNNNNNNNNNNNNNNNNNNNNNNNetwork status bool is %hhd, status is %i", self.networkIsReachable, netStatus);
 	[self configureView];
 }
-#pragma mark Clipboard
+#pragma mark Copying from Event Name Pasteboard and Gesture Recognizer
 
 - (void) copy: (id) sender
 {
