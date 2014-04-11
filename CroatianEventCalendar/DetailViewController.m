@@ -87,7 +87,12 @@ int savedEndDateToEmailConstraint;
         self.name.text = [[self.detailItem valueForKey:@"name"] description];
 		self.calendarEvent.title = self.name.text;
 
-		
+		//set up the label so that it can be copied like a textfield
+		[self.name setUserInteractionEnabled:YES];
+		UIGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+        initWithTarget:self action:@selector(handleLongPress:)];
+		[self.name addGestureRecognizer:longPress];
+
 		dataInItem = [self trimString:[[self.detailItem valueForKey:@"location"] description]];
 		if (dataInItem) {
 			//location is a label because OHAttributedLabel does not handle more than one line of text
@@ -686,4 +691,22 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 //	NSLog (@"NNNNNNNNNNNNNNNNNNNNNNNNNNetwork status bool is %hhd, status is %i", self.networkIsReachable, netStatus);
 	[self configureView];
 }
+#pragma mark Clipboard
+
+- (void) copy: (id) sender
+{
+//    NSLog(@"Copy handler, label: “%@”.", self.name.text);
+	UIPasteboard *pboard = [UIPasteboard generalPasteboard];
+    pboard.string = self.name.text;
+}
+
+- (void) handleLongPress: (UIGestureRecognizer*) recognizer
+{
+	//AllowCopy catagory on UILabel allows UILabel to become first responder
+    [self.name becomeFirstResponder];
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    [menu setTargetRect:self.name.frame inView:self.view];
+    [menu setMenuVisible:YES animated:YES];
+}
+
 @end

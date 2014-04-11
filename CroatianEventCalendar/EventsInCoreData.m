@@ -44,28 +44,9 @@ int beginHour;
 	
 	Event *event = [NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
 
-	event.eventId = [NSNumber numberWithInteger:[[newEvent valueForKey: @"id"] intValue]];
-	event.name = [newEvent valueForKey: @"name"];
-	
+	[self formatEvent: event withNewEvent: newEvent];
+	//add date separately because it's already been formatted for addEvent
 	event.beginDate = date;
-	event.endDate = [self processEndDate: newEvent];
-	
-//		NSLog(@" --------------> endDate is %@", event.endDate);
-	
-	event.location = [newEvent valueForKey: @"location"];
-	event.email = [newEvent valueForKey: @"email"];
-	event.phone = [newEvent valueForKey: @"phone"];
-	event.link = [newEvent valueForKey: @"link"];
-
-	if ([[newEvent valueForKey: @"link"] length] > 0) {
-	NSRange range = [[newEvent valueForKey: @"link"] rangeOfString:@"http://"];
-		if (range.length > 0) {
-			event.link = [[[newEvent valueForKey: @"link"] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		}
-	}
-
-	//	event.link_name = [newEvent valueForKey: @"link_name"];
-	event.desc = [newEvent valueForKey: @"description"];
 	
 	if (![self.managedObjectContext save:&error]) {
 		NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
@@ -88,16 +69,24 @@ int beginHour;
 //	[[response firstObject] setValue:@"Entry" forKey:@"Type"];
 
     // insert the events into Core Data
-
+	
+	[self formatEvent: event withNewEvent: newEvent];
+	//add date separately because it's already been formatted for addEvent and needs to be formatted for updateEvent
+	event.beginDate = [self processBeginDate: newEvent];
+	
+	if (![self.managedObjectContext save:&error]) {
+		NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
+	}
+        
+}
+- (void) formatEvent: (Event *) event withNewEvent: (NSDictionary *) newEvent {
+	
 	event.eventId = [NSNumber numberWithInteger:[[newEvent valueForKey: @"id"] intValue]];
 	event.name = [newEvent valueForKey: @"name"];
-			
-//	NSLog(@" --------------> event is %@", event.name);
-
 	
-	event.beginDate = [self processBeginDate: newEvent];
 	event.endDate = [self processEndDate: newEvent];
 	
+//		NSLog(@" --------------> endDate is %@", event.endDate);
 	
 	event.location = [newEvent valueForKey: @"location"];
 	event.email = [newEvent valueForKey: @"email"];
@@ -113,11 +102,6 @@ int beginHour;
 
 //	event.link_name = [newEvent valueForKey: @"link_name"];
 	event.desc = [newEvent valueForKey: @"description"];
-	
-	if (![self.managedObjectContext save:&error]) {
-		NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
-	}
-        
 }
 - (NSDate*) processBeginDate: (NSDictionary*) newEvent {
 

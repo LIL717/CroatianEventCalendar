@@ -29,6 +29,7 @@
 		701C3D74181EBF21007FFDF1 /* ParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D73181EBF21007FFDF1 /* ParseOperation.m */; };
 		701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D76181EC513007FFDF1 /* EventsInCoreData.m */; };
 		701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D79181EE0A4007FFDF1 /* Event.m */; };
+		7033092618F74D5D00F183E7 /* UILabel+AllowCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7033092518F74D5D00F183E7 /* UILabel+AllowCopy.m */; };
 		708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */ = {isa = PBXBuildFile; fileRef = 708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */; };
 		709E041B18F3AA74007165D6 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 709E041518F3AA73007165D6 /* libTestFlight.a */; };
 		709E041C18F3AA74007165D6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 709E041618F3AA73007165D6 /* README.md */; };
@@ -81,6 +82,8 @@
 		701C3D76181EC513007FFDF1 /* EventsInCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsInCoreData.m; sourceTree = "<group>"; };
 		701C3D78181EE0A4007FFDF1 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		701C3D79181EE0A4007FFDF1 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		7033092418F74D5D00F183E7 /* UILabel+AllowCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UILabel+AllowCopy.h"; path = "Categories/UILabel+AllowCopy.h"; sourceTree = "<group>"; };
+		7033092518F74D5D00F183E7 /* UILabel+AllowCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UILabel+AllowCopy.m"; path = "Categories/UILabel+AllowCopy.m"; sourceTree = "<group>"; };
 		708BDB6018E9E63600077A0A /* UIAlertView+Commodity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Commodity.h"; sourceTree = "<group>"; };
 		708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Commodity.m"; sourceTree = "<group>"; };
 		709E041518F3AA73007165D6 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
@@ -168,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				709E041418F3AA73007165D6 /* TestFlightSDK3-2 */,
+				7033092A18F7690800F183E7 /* Categories */,
 				708BDB6418E9E67A00077A0A /* Classes */,
 				701C3D29181EBCBA007FFDF1 /* AppDelegate.h */,
 				701C3D2A181EBCBA007FFDF1 /* AppDelegate.m */,
@@ -252,6 +256,23 @@
 				70DE19DE18E7833000885F07 /* WebViewController.m */,
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		7033092A18F7690800F183E7 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				7033092B18F7692600F183E7 /* UILabel+AllowCopy */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		7033092B18F7692600F183E7 /* UILabel+AllowCopy */ = {
+			isa = PBXGroup;
+			children = (
+				7033092418F74D5D00F183E7 /* UILabel+AllowCopy.h */,
+				7033092518F74D5D00F183E7 /* UILabel+AllowCopy.m */,
+			);
+			name = "UILabel+AllowCopy";
 			sourceTree = "<group>";
 		};
 		708BDB6318E9E65300077A0A /* UIAlertView+Commodity */ = {
@@ -423,6 +444,7 @@
 				701C3D3A181EBCBA007FFDF1 /* DetailViewController.m in Sources */,
 				70DE19DF18E7833100885F07 /* WebViewController.m in Sources */,
 				701C3D37181EBCBA007FFDF1 /* MasterViewController.m in Sources */,
+				7033092618F74D5D00F183E7 /* UILabel+AllowCopy.m in Sources */,
 				701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */,
 				701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */,
 				708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */,
