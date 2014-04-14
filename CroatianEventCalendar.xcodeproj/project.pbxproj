@@ -40,6 +40,20 @@
 		709E041F18F3AB17007165D6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 709E041E18F3AB17007165D6 /* libz.dylib */; };
 		709E042118F3D150007165D6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 709E042018F3D150007165D6 /* Podfile */; };
 		70B0376018F46A6B0075F55B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B0375F18F46A6B0075F55B /* MapKit.framework */; };
+		70F3A49B18FC49F400DBD497 /* libFlurry_4.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F3A40318FC49F300DBD497 /* libFlurry_4.4.0.a */; };
+		70F3A52018FC49F400DBD497 /* Flurry iOS-4.x-Upgrade-README .pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A48A18FC49F300DBD497 /* Flurry iOS-4.x-Upgrade-README .pdf */; };
+		70F3A52218FC49F400DBD497 /* FlurryiOSAdvertisingREADMEv4.4.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A48F18FC49F400DBD497 /* FlurryiOSAdvertisingREADMEv4.4.0.pdf */; };
+		70F3A52318FC49F400DBD497 /* FlurryiOSAnalyticsREADMEv4.4.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49018FC49F400DBD497 /* FlurryiOSAnalyticsREADMEv4.4.0.pdf */; };
+		70F3A52418FC49F400DBD497 /* FlurryiOSReleaseNotesv4.4.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49118FC49F400DBD497 /* FlurryiOSReleaseNotesv4.4.0.pdf */; };
+		70F3A52518FC49F400DBD497 /* Avro-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49318FC49F400DBD497 /* Avro-LICENSE.txt */; };
+		70F3A52618FC49F400DBD497 /* Flurry AppCircle Advertiser TOS FINAL August 1, 2012.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49418FC49F400DBD497 /* Flurry AppCircle Advertiser TOS FINAL August 1, 2012.pdf */; };
+		70F3A52718FC49F400DBD497 /* Flurry AppSpot Publisher Platform TOS FINAL August 1, 2012.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49518FC49F400DBD497 /* Flurry AppSpot Publisher Platform TOS FINAL August 1, 2012.pdf */; };
+		70F3A52818FC49F400DBD497 /* Flurry-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49618FC49F400DBD497 /* Flurry-LICENSE.txt */; };
+		70F3A52918FC49F400DBD497 /* Flurry_AppCircle_Advertiser_TOS.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49718FC49F400DBD497 /* Flurry_AppCircle_Advertiser_TOS.pdf */; };
+		70F3A52A18FC49F400DBD497 /* Flurry_AppSpot_Publisher_Platform_TOS.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49818FC49F400DBD497 /* Flurry_AppSpot_Publisher_Platform_TOS.pdf */; };
+		70F3A52B18FC49F400DBD497 /* Jansson-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49918FC49F400DBD497 /* Jansson-LICENSE.txt */; };
+		70F3A52C18FC49F400DBD497 /* ProjectApiKey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 70F3A49A18FC49F400DBD497 /* ProjectApiKey.txt */; };
+		70F3A52E18FC4A6500DBD497 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F3A52D18FC4A6500DBD497 /* Security.framework */; };
 		AEDD208D83094A298D8F796F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2DD2203D60C4AD9891F1A2E /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -104,6 +118,21 @@
 		709E041E18F3AB17007165D6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		709E042018F3D150007165D6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		70B0375F18F46A6B0075F55B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		70F3A40218FC49F300DBD497 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		70F3A40318FC49F300DBD497 /* libFlurry_4.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.4.0.a; sourceTree = "<group>"; };
+		70F3A48A18FC49F300DBD497 /* Flurry iOS-4.x-Upgrade-README .pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Flurry iOS-4.x-Upgrade-README .pdf"; sourceTree = "<group>"; };
+		70F3A48F18FC49F400DBD497 /* FlurryiOSAdvertisingREADMEv4.4.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = FlurryiOSAdvertisingREADMEv4.4.0.pdf; sourceTree = "<group>"; };
+		70F3A49018FC49F400DBD497 /* FlurryiOSAnalyticsREADMEv4.4.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = FlurryiOSAnalyticsREADMEv4.4.0.pdf; sourceTree = "<group>"; };
+		70F3A49118FC49F400DBD497 /* FlurryiOSReleaseNotesv4.4.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = FlurryiOSReleaseNotesv4.4.0.pdf; sourceTree = "<group>"; };
+		70F3A49318FC49F400DBD497 /* Avro-LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Avro-LICENSE.txt"; sourceTree = "<group>"; };
+		70F3A49418FC49F400DBD497 /* Flurry AppCircle Advertiser TOS FINAL August 1, 2012.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Flurry AppCircle Advertiser TOS FINAL August 1, 2012.pdf"; sourceTree = "<group>"; };
+		70F3A49518FC49F400DBD497 /* Flurry AppSpot Publisher Platform TOS FINAL August 1, 2012.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Flurry AppSpot Publisher Platform TOS FINAL August 1, 2012.pdf"; sourceTree = "<group>"; };
+		70F3A49618FC49F400DBD497 /* Flurry-LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Flurry-LICENSE.txt"; sourceTree = "<group>"; };
+		70F3A49718FC49F400DBD497 /* Flurry_AppCircle_Advertiser_TOS.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Flurry_AppCircle_Advertiser_TOS.pdf; sourceTree = "<group>"; };
+		70F3A49818FC49F400DBD497 /* Flurry_AppSpot_Publisher_Platform_TOS.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Flurry_AppSpot_Publisher_Platform_TOS.pdf; sourceTree = "<group>"; };
+		70F3A49918FC49F400DBD497 /* Jansson-LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Jansson-LICENSE.txt"; sourceTree = "<group>"; };
+		70F3A49A18FC49F400DBD497 /* ProjectApiKey.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ProjectApiKey.txt; sourceTree = "<group>"; };
+		70F3A52D18FC4A6500DBD497 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9D9E8F0AB15842239F7E262D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		E2DD2203D60C4AD9891F1A2E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -113,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70F3A52E18FC4A6500DBD497 /* Security.framework in Frameworks */,
 				70B0376018F46A6B0075F55B /* MapKit.framework in Frameworks */,
 				709E041F18F3AB17007165D6 /* libz.dylib in Frameworks */,
 				701C3D1B181EBCBA007FFDF1 /* CoreGraphics.framework in Frameworks */,
@@ -121,6 +151,7 @@
 				709E041B18F3AA74007165D6 /* libTestFlight.a in Frameworks */,
 				701C3D19181EBCBA007FFDF1 /* Foundation.framework in Frameworks */,
 				AEDD208D83094A298D8F796F /* libPods.a in Frameworks */,
+				70F3A49B18FC49F400DBD497 /* libFlurry_4.4.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +192,7 @@
 		701C3D17181EBCBA007FFDF1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				70F3A52D18FC4A6500DBD497 /* Security.framework */,
 				70B0375F18F46A6B0075F55B /* MapKit.framework */,
 				709E041E18F3AB17007165D6 /* libz.dylib */,
 				701C3D18181EBCBA007FFDF1 /* Foundation.framework */,
@@ -229,6 +261,7 @@
 		701C3D6E181EBE83007FFDF1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				70F3A3FF18FC49F300DBD497 /* Flurry iPhone SDK viPhone 4 */,
 			);
 			name = Resources;
 			path = ..;
@@ -317,6 +350,52 @@
 			path = "TestFlightSDK3-2";
 			sourceTree = "<group>";
 		};
+		70F3A3FF18FC49F300DBD497 /* Flurry iPhone SDK viPhone 4 */ = {
+			isa = PBXGroup;
+			children = (
+				70F3A40018FC49F300DBD497 /* Flurry-iOS-4.4.0 */,
+				70F3A49A18FC49F400DBD497 /* ProjectApiKey.txt */,
+			);
+			name = "Flurry iPhone SDK viPhone 4";
+			path = "CroatianEventCalendar/Flurry iPhone SDK viPhone 4";
+			sourceTree = "<group>";
+		};
+		70F3A40018FC49F300DBD497 /* Flurry-iOS-4.4.0 */ = {
+			isa = PBXGroup;
+			children = (
+				70F3A40118FC49F300DBD497 /* Flurry */,
+				70F3A48A18FC49F300DBD497 /* Flurry iOS-4.x-Upgrade-README .pdf */,
+				70F3A48F18FC49F400DBD497 /* FlurryiOSAdvertisingREADMEv4.4.0.pdf */,
+				70F3A49018FC49F400DBD497 /* FlurryiOSAnalyticsREADMEv4.4.0.pdf */,
+				70F3A49118FC49F400DBD497 /* FlurryiOSReleaseNotesv4.4.0.pdf */,
+				70F3A49218FC49F400DBD497 /* Licenses */,
+			);
+			path = "Flurry-iOS-4.4.0";
+			sourceTree = "<group>";
+		};
+		70F3A40118FC49F300DBD497 /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				70F3A40218FC49F300DBD497 /* Flurry.h */,
+				70F3A40318FC49F300DBD497 /* libFlurry_4.4.0.a */,
+			);
+			path = Flurry;
+			sourceTree = "<group>";
+		};
+		70F3A49218FC49F400DBD497 /* Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				70F3A49318FC49F400DBD497 /* Avro-LICENSE.txt */,
+				70F3A49418FC49F400DBD497 /* Flurry AppCircle Advertiser TOS FINAL August 1, 2012.pdf */,
+				70F3A49518FC49F400DBD497 /* Flurry AppSpot Publisher Platform TOS FINAL August 1, 2012.pdf */,
+				70F3A49618FC49F400DBD497 /* Flurry-LICENSE.txt */,
+				70F3A49718FC49F400DBD497 /* Flurry_AppCircle_Advertiser_TOS.pdf */,
+				70F3A49818FC49F400DBD497 /* Flurry_AppSpot_Publisher_Platform_TOS.pdf */,
+				70F3A49918FC49F400DBD497 /* Jansson-LICENSE.txt */,
+			);
+			path = Licenses;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -395,12 +474,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70F3A52A18FC49F400DBD497 /* Flurry_AppSpot_Publisher_Platform_TOS.pdf in Resources */,
+				70F3A52B18FC49F400DBD497 /* Jansson-LICENSE.txt in Resources */,
+				70F3A52418FC49F400DBD497 /* FlurryiOSReleaseNotesv4.4.0.pdf in Resources */,
 				709E042118F3D150007165D6 /* Podfile in Resources */,
+				70F3A52C18FC49F400DBD497 /* ProjectApiKey.txt in Resources */,
+				70F3A52818FC49F400DBD497 /* Flurry-LICENSE.txt in Resources */,
 				701C3D31181EBCBA007FFDF1 /* Main_iPad.storyboard in Resources */,
+				70F3A52918FC49F400DBD497 /* Flurry_AppCircle_Advertiser_TOS.pdf in Resources */,
 				701C3D3C181EBCBA007FFDF1 /* Images.xcassets in Resources */,
+				70F3A52518FC49F400DBD497 /* Avro-LICENSE.txt in Resources */,
+				70F3A52718FC49F400DBD497 /* Flurry AppSpot Publisher Platform TOS FINAL August 1, 2012.pdf in Resources */,
 				709E041D18F3AA74007165D6 /* release_notes.md in Resources */,
+				70F3A52018FC49F400DBD497 /* Flurry iOS-4.x-Upgrade-README .pdf in Resources */,
 				701C3D2E181EBCBA007FFDF1 /* Main_iPhone.storyboard in Resources */,
+				70F3A52218FC49F400DBD497 /* FlurryiOSAdvertisingREADMEv4.4.0.pdf in Resources */,
+				70F3A52618FC49F400DBD497 /* Flurry AppCircle Advertiser TOS FINAL August 1, 2012.pdf in Resources */,
 				709E041C18F3AA74007165D6 /* README.md in Resources */,
+				70F3A52318FC49F400DBD497 /* FlurryiOSAnalyticsREADMEv4.4.0.pdf in Resources */,
 				701C3D25181EBCBA007FFDF1 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,6 +699,16 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CroatianEventCalendar/TestFlightSDK3-2",
+					"$(PROJECT_DIR)/CroatianEventCalendar/Flurry",
+					iPhone,
+					SDK,
+					viPhone,
+					"4/Flurry-iOS-4.4.0/Flurry",
+					"$(PROJECT_DIR)/CroatianEventCalendar/Flurry",
+					iPhone,
+					SDK,
+					viPhone,
+					"4/Flurry-iOS-4.4.0/FlurryAds",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -627,6 +728,16 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/CroatianEventCalendar/TestFlightSDK3-2",
+					"$(PROJECT_DIR)/CroatianEventCalendar/Flurry",
+					iPhone,
+					SDK,
+					viPhone,
+					"4/Flurry-iOS-4.4.0/Flurry",
+					"$(PROJECT_DIR)/CroatianEventCalendar/Flurry",
+					iPhone,
+					SDK,
+					viPhone,
+					"4/Flurry-iOS-4.4.0/FlurryAds",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

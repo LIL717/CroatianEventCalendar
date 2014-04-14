@@ -16,6 +16,7 @@
 #import <EventKit/EventKit.h>
 #import <MapKit/MapKit.h>
 #import "Reachability.h"
+#import "Flurry.h"
 
 @interface DetailViewController ()<UIActionSheetDelegate>
 
@@ -78,6 +79,55 @@ int savedEndDateToEmailConstraint;
     }        
 }
 
+#pragma mark - View handling
+
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view, typically from a nib.
+	
+	self.navigationController.navigationBar.translucent = YES;
+	
+	// Initialize the event store for adding to Calendar
+	self.eventStore = [[EKEventStore alloc] init];
+	
+	//set up the calendarEvent here, even if it doesn't get used, so that as the view is poplulated the event can be populated too
+	self.calendarEvent = [EKEvent eventWithEventStore:self.eventStore];
+		
+	savedEndDateHeight = self.endDateHeight.constant;
+	savedBeginDateToEndDateConstraint = self.beginDateToEndDateConstraint.constant;
+	savedLinkToDescriptionConstraint = self.linkToDescriptionConstraint.constant;
+	savedLinkHeight = self.linkHeight.constant;
+	savedPhoneToLinkConstraint = self.phoneToLinkConstraint.constant;
+	savedPhoneHeight = self.phoneHeight.constant;
+	savedEmailToPhoneConstraint = self.emailToPhoneConstraint.constant;
+	savedEmailHeight = self.emailHeight.constant;
+	savedEndDateToEmailConstraint = self.endDateToEmailConstraint.constant;
+	
+	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: @"tileBackground"]];
+	self.mapView.delegate = self;
+
+     //Observe the kNetworkReachabilityChangedNotification. When that notification is posted, the method reachabilityChanged will be called.
+    
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											selector:@selector(reachabilityChanged:)
+											name:kReachabilityChangedNotification
+											object:nil];
+	//Check initial reachability
+    NSString *remoteHostName = @"www.apple.com";
+	self.hostReachability = [Reachability reachabilityWithHostname:remoteHostName];
+	[self.hostReachability startNotifier];
+	[self updateReachabilityFlag:self.hostReachability];
+	
+//	[self configureView];  initial configureView is now called in updateReachabiityFlag:
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 - (void)configureView
 {
     // Update the user interface for the detail item.
@@ -180,10 +230,10 @@ int savedEndDateToEmailConstraint;
 		if (dataInItem) {
 //			NSLog (@" email is %@",[[self.detailItem valueForKey:@"email"] description]);
 			self.email.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"email"] description]];
-#define TESTING 1
-#ifdef TESTING
-			self.email.attributedText = [self buildAttributedString: @"calendar@croatiafest.org"];
-#endif
+//#define TESTING 1
+//#ifdef TESTING
+//			self.email.attributedText = [self buildAttributedString: @"calendar@croatiafest.org"];
+//#endif
 			self.email.automaticallyAddLinksForType = NSTextCheckingTypeLink;
 			self.email.delegate = self; // Delegate methods are called when the user taps on a link
 			self.emailHeight.constant = savedEmailHeight;
@@ -208,10 +258,10 @@ int savedEndDateToEmailConstraint;
 			}
 
 			self.phone.attributedText = [self buildAttributedString: [[self.detailItem valueForKey:@"phone"] description]];
-#define TESTING 1
-#ifdef TESTING
-			self.phone.attributedText = [self buildAttributedString: @"425-681-1858"];
-#endif
+//#define TESTING 1
+//#ifdef TESTING
+//			self.phone.attributedText = [self buildAttributedString: @"425-681-1858"];
+//#endif
 			self.phone.automaticallyAddLinksForType = NSTextCheckingTypePhoneNumber;
 			self.phoneHeight.constant = savedPhoneHeight;
 			self.emailToPhoneConstraint.constant = savedEmailToPhoneConstraint;
@@ -396,55 +446,6 @@ int savedEndDateToEmailConstraint;
 		}];
 		
 }
-#pragma mark - View handling
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-	
-	self.navigationController.navigationBar.translucent = YES;
-	
-	// Initialize the event store for adding to Calendar
-	self.eventStore = [[EKEventStore alloc] init];
-	
-	//set up the calendarEvent here, even if it doesn't get used, so that as the view is poplulated the event can be populated too
-	self.calendarEvent = [EKEvent eventWithEventStore:self.eventStore];
-		
-	savedEndDateHeight = self.endDateHeight.constant;
-	savedBeginDateToEndDateConstraint = self.beginDateToEndDateConstraint.constant;
-	savedLinkToDescriptionConstraint = self.linkToDescriptionConstraint.constant;
-	savedLinkHeight = self.linkHeight.constant;
-	savedPhoneToLinkConstraint = self.phoneToLinkConstraint.constant;
-	savedPhoneHeight = self.phoneHeight.constant;
-	savedEmailToPhoneConstraint = self.emailToPhoneConstraint.constant;
-	savedEmailHeight = self.emailHeight.constant;
-	savedEndDateToEmailConstraint = self.endDateToEmailConstraint.constant;
-	
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed: @"tileBackground"]];
-	self.mapView.delegate = self;
-
-     //Observe the kNetworkReachabilityChangedNotification. When that notification is posted, the method reachabilityChanged will be called.
-    
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											selector:@selector(reachabilityChanged:)
-											name:kReachabilityChangedNotification
-											object:nil];
-	//Check initial reachability
-    NSString *remoteHostName = @"www.apple.com";
-	self.hostReachability = [Reachability reachabilityWithHostname:remoteHostName];
-	[self.hostReachability startNotifier];
-	[self updateReachabilityFlag:self.hostReachability];
-	
-//	[self configureView];  initial configureView is now called in updateReachabiityFlag:
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 /////////////////////////////////////////////////////////////////////////////
 #pragma mark - Visited Links Managment
 /////////////////////////////////////////////////////////////////////////////
@@ -543,6 +544,8 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 
 - (IBAction)openMapWithAddress:(id)sender {
 
+	[Flurry logEvent:@"eventMapped"];
+
 	UIButton *button = (UIButton *)sender;
 	NSString *addressString = button.currentTitle;
 
@@ -559,6 +562,8 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 
 - (IBAction)handleMoreButton:(id)sender {
 	
+	[Flurry logEvent:@"eventShared"];
+
 	NSString *myURLString;
 	if ([self.link.attributedText.string length] > 0) {
 		myURLString = [NSString stringWithFormat: @"http://%@", self.link.attributedText.string];
@@ -583,6 +588,7 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 #pragma mark Access Calendar
 - (IBAction)addToiCal:(id)sender {
 
+	[Flurry logEvent:@"iCalAdd"];
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle: self.name.text message:@"will be added to iPhone calendar" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     // optional - add more buttons:
 //    [alert addButtonWithTitle:@"OK"];

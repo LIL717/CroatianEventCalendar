@@ -13,6 +13,8 @@
 #import "SparkInspector.h"
 #import "MasterViewcontroller.h"
 #import "TestFlight.h"
+#import "Flurry.h"
+
 
 // this framework was imported so we could use the kCFURLErrorNotConnectedToInternet error code
 #import <CFNetwork/CFNetwork.h>
@@ -76,8 +78,12 @@ static NSString * const kEvents = @"events";
     // Override point for customization after application launch.
 	
 	//Override point for customization after application launch.
-    [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
-
+//    [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
+     //note: iOS only allows one crash reporting tool per app; if using another, set to: NO
+     [Flurry setCrashReportingEnabled:YES];
+     
+    // Replace YOUR_API_KEY with the api key in the downloaded package
+    [Flurry startSession:@"YZJXTYRRX5VJMBJZHM29"];
     [self setUpURLConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
