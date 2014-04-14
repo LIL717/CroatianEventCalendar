@@ -74,19 +74,6 @@ static NSString * const kEvents = @"events";
                                                        [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:25.0], NSFontAttributeName, nil]];
 				
     // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)navigationController.topViewController;
-        
-        UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        MasterViewController *controller = (MasterViewController *)masterNavigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
-    } else {
-        UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-        MasterViewController *controller = (MasterViewController *)navigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
-    }
 	
 	//Override point for customization after application launch.
     [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
@@ -337,11 +324,11 @@ static NSString * const kEvents = @"events";
 
     LogMethod();
 	
-	EventsInCoreData *insertEvents = [EventsInCoreData alloc];
-	insertEvents.managedObjectContext = self.managedObjectContext;
+	EventsInCoreData *eventsInCoreData = [EventsInCoreData alloc];
+	eventsInCoreData.managedObjectContext = self.managedObjectContext;
 	
     if (self.firstTimeThru) {
-		self.arrayOfCoreDataEvents = [[NSMutableArray alloc] initWithArray: [insertEvents arrayOfEvents]];
+		self.arrayOfCoreDataEvents = [[NSMutableArray alloc] initWithArray: [eventsInCoreData arrayOfEvents]];
 		for (Event *event in arrayOfCoreDataEvents) {
 
 			NSLog (@"Event %@ %@ %@", event.eventId, event.name, event.beginDate);
@@ -351,7 +338,7 @@ static NSString * const kEvents = @"events";
 	// check if core data is empty, just add all events at once
 	if ([arrayOfCoreDataEvents count] == 0) {
 		// add the whole array of dictionaries to core data because its the first time
-		[insertEvents addEventsToCoreData:parsedData];
+		[eventsInCoreData addEventsToCoreData:parsedData];
 		return;
 	}
 	
@@ -375,7 +362,7 @@ static NSString * const kEvents = @"events";
 		if ([arrayOfCoreDataEvents count] > 0) {
 			coreDataId = [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue];
 		} else {
-			[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
+			[eventsInCoreData addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
 			break;
 		}
 
@@ -392,7 +379,7 @@ static NSString * const kEvents = @"events";
 
 				} else {
 					//entry is not already in core data so add it - this is a new id higher than any in core data
-					[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
+					[eventsInCoreData addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
 					break;
 				}
 
@@ -400,9 +387,9 @@ static NSString * const kEvents = @"events";
 		//if event ids match then insert the new event
 		if (incomingId < coreDataId) {
 			//entry is not already in core data so add it
-			[insertEvents addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
+			[eventsInCoreData addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
 		} else if (incomingId == coreDataId) {
-			[insertEvents updateEventInCoreData: [incomingEventsArray objectAtIndex: i]];
+			[eventsInCoreData updateEventInCoreData: [incomingEventsArray objectAtIndex: i]];
 			[arrayOfCoreDataEvents removeObjectAtIndex: j];
 			//don't increment j, it should stay where it is because next object becomes current
 		}
@@ -411,10 +398,11 @@ static NSString * const kEvents = @"events";
 	
 	if (doneParsing) {
 	//delete the events that are in core data that were not present in incomingEvents (what is left in array)
-		[insertEvents removeEventsFromCoreData: arrayOfCoreDataEvents];
+		[eventsInCoreData removeEventsFromCoreData: arrayOfCoreDataEvents];
+
 	}
 	
-	[insertEvents listEvents];
+	[eventsInCoreData listEvents];
 }
 
 #pragma mark -

@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * link;
 @property (nonatomic, retain) NSString * link_name;
 @property (nonatomic, retain) NSString * desc;
+@property (nonatomic, retain) NSData   * mapItem;
 @end
 
 @interface Event (CoreDataGeneratedAccessors)

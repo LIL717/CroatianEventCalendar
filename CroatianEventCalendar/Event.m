@@ -20,5 +20,6 @@
 @dynamic link;
 @dynamic link_name;
 @dynamic desc;
+@dynamic mapItem;
 
 @end

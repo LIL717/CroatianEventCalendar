@@ -9,10 +9,12 @@
 @import MessageUI;
 @import MapKit;
 @import EventKit;
-
+#import "SplitViewButtonHandler.h"
 #import <OHAttributedLabel/OHAttributedLabel.h>
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate, OHAttributedLabelDelegate, MKMapViewDelegate>
+@interface DetailViewController : UIViewController <SplitViewButtonHandler, OHAttributedLabelDelegate, MKMapViewDelegate>
+
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 @property (strong, nonatomic) id detailItem;
 

@@ -10,6 +10,7 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
+#import "EventsMapViewController.h"
 #import "EventsInCoreData.h"
 #import "Event.h"
 
@@ -25,6 +26,10 @@
 - (void)awakeFromNib
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		EventsMapViewController *eventsMapViewController = nil;
+		eventsMapViewController = (EventsMapViewController *)[self chooseViewController:@"EventsMapViewController"];
+		eventsMapViewController.masterViewController = self;
+		[self.splitViewController setDelegate:self];
         self.clearsSelectionOnViewWillAppear = NO;
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
@@ -39,15 +44,12 @@
     self.managedObjectContext = [self.appDelegate managedObjectContext];
 
 	// Do any additional setup after loading the view, typically from a nib.
-//    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 	
 	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tileBackground"]];
 //	}
-//	InsertEvents *insertEvents = [InsertEvents alloc];
-//	insertEvents.managedObjectContext = self.managedObjectContext;
-//	[insertEvents listEvents];
+	EventsInCoreData *eventsInCoreData = [EventsInCoreData alloc];
+	eventsInCoreData.managedObjectContext = self.managedObjectContext;
+	[eventsInCoreData listEvents];
 
     NSError *error;
 	if (![[self fetchedResultsController] performFetch:&error]) {
@@ -123,13 +125,61 @@
 		// set the alpha to half on the selected row so that the background shows through
 		UITableViewCell *cell = [tableView cellForRowAtIndexPath: indexPath];
 		cell.selectedBackgroundView.alpha = 0.5;
+		
 
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.detailViewController.detailItem = object;
-    }
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		DetailViewController *newController = nil;
+
+		newController = (DetailViewController *)[self chooseViewController:@"EventDetailViewController"];
+		NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+		newController.detailItem = object;
+		
+		UIBarButtonItem *mapButton = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Map"
+                               style:UIBarButtonItemStyleBordered 
+                               target:self 
+                               action:@selector(mapView)];
+		self.navigationItem.leftBarButtonItem = mapButton;
+	}
+
 }
+- (void) mapView {
 
+		EventsMapViewController *newController = nil;
+		newController = (EventsMapViewController *)[self chooseViewController:@"EventsMapViewController"];
+		newController.masterViewController = self;
+		self.navigationItem.leftBarButtonItem = nil;
+		//get rid of highlighted cell
+		[self.tableView reloadData];
+
+}
+- (UIViewController *) chooseViewController: (NSString *) viewControllerIdentifier {
+
+        UIStoryboard *storyboard = [self storyboard];
+        DetailViewController *newController = nil;
+
+		newController = [storyboard instantiateViewControllerWithIdentifier:viewControllerIdentifier];
+
+        // now set this to the navigation controller
+        UINavigationController *navController = [[[self splitViewController ] viewControllers ] lastObject ];
+        DetailViewController *oldController = [[navController viewControllers] firstObject];
+        
+        NSArray *newStack = [NSArray arrayWithObjects:newController, nil ];
+        [navController setViewControllers:newStack];
+        
+        UIBarButtonItem *splitViewButton = [[oldController navigationItem] leftBarButtonItem];
+        UIPopoverController *popoverController = [oldController masterPopoverController];
+        [newController setSplitViewButton:splitViewButton forPopoverController:popoverController];
+        
+        // see if we should be hidden
+        if (!UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])) {
+            // we are in portrait mode so go away
+            [popoverController dismissPopoverAnimated:YES];
+            
+        }
+		
+		return newController;
+}
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
@@ -256,5 +306,20 @@ arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
   }
   [self dismissViewControllerAnimated:YES completion:nil];
 }
+#pragma mark - Split View Delegate
+- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
+{
+    UINavigationController *navController = [[[self splitViewController ] viewControllers ] lastObject ];
+    DetailViewController *vc = [[navController viewControllers] firstObject];
+    
+    [vc setSplitViewButton:barButtonItem forPopoverController:popoverController];
+}
 
+- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    UINavigationController *navController = [[[self splitViewController ] viewControllers ] lastObject ];
+    DetailViewController *vc = [[navController viewControllers] firstObject];
+    
+    [vc setSplitViewButton:nil forPopoverController:nil];
+}
 @end

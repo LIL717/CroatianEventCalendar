@@ -9,18 +9,15 @@
 @import MessageUI;
 
 @class AppDelegate;
-@class DetailViewController;
 
-#import <CoreData/CoreData.h>
-
-@interface MasterViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,MFMailComposeViewControllerDelegate>
-
-@property (strong, nonatomic) DetailViewController *detailViewController;
+@interface MasterViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,MFMailComposeViewControllerDelegate, UISplitViewControllerDelegate>
 
 @property (retain, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong)   AppDelegate *appDelegate;
 
 - (IBAction)addEventViaEmail:(id)sender;
+- (UIViewController *) chooseViewController: (NSString *) viewControllerIdentifier;
+
 
 @end

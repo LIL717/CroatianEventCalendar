@@ -6,6 +6,7 @@
 //  Copyright 2013 CroatianEventCalendar. All rights reserved.
 //
 
+@import MapKit;
 @class Event;
 
 @interface EventsInCoreData : NSManagedObject {
@@ -20,6 +21,7 @@
 - (void)updateEventInCoreData:(NSDictionary *) newEvent;
 - (void) listEvents;
 - (NSArray *) arrayOfEvents;
+- (NSArray *) arrayOfMapItems;
 - (void)removeAllEventsFromCoreData;
 - (void)removeEventsFromCoreData: (NSArray *) events;
 

@@ -1,3 +1,4 @@
 pod 'SparkInspector'
 pod 'OHAttributedLabel'
-pod 'Reachability'	
+pod 'Reachability'
+pod 'MBProgressHUD'

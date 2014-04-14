@@ -8,12 +8,16 @@
 
 #import "EventsInCoreData.h"
 #import "Event.h"
+#import <MapKit/MapKit.h>
+#import "CEMapItem.h"
 
 @implementation EventsInCoreData
 
 @synthesize event = event_;
 @synthesize managedObjectContext = managedObjectContext_;
 int beginHour;
+int requestsMadeCount = 0;
+int requestsReturnedCount = 0;
 
 
 - (void)dealloc {
@@ -89,6 +93,7 @@ int beginHour;
 //		NSLog(@" --------------> endDate is %@", event.endDate);
 	
 	event.location = [newEvent valueForKey: @"location"];
+	[self getMapItemForLocation: [newEvent valueForKey: @"location"] forEvent: event];
 	event.email = [newEvent valueForKey: @"email"];
 	event.phone = [newEvent valueForKey: @"phone"];
 	event.link = [newEvent valueForKey: @"link"];
@@ -102,6 +107,46 @@ int beginHour;
 
 //	event.link_name = [newEvent valueForKey: @"link_name"];
 	event.desc = [newEvent valueForKey: @"description"];
+}
+-(void) getMapItemForLocation: (NSString *) location forEvent: (Event *) event {
+
+		// Create and initialize a search request object.
+		MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+		request.naturalLanguageQuery = location;
+//		request.region = self.mapView.region;
+//		[self.mapView setRegion:[self.mapView regionThatFits:request.region] animated:YES];
+		requestsMadeCount++;
+		// Create and initialize a search object.
+		MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+		 
+		// Start the search and display the results as annotations on the map.
+		[search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error)
+		{
+			MKMapItem *newMapItem = [response.mapItems firstObject];
+			CEMapItem *myMapItem = [CEMapItem alloc];
+			myMapItem.eventId = event.eventId;
+			myMapItem.name = event.name;
+			myMapItem.beginDate = event.beginDate;
+			myMapItem.placemark = newMapItem.placemark;
+			NSData *myData = [[NSData alloc] init];
+			myData = [NSKeyedArchiver archivedDataWithRootObject: (CEMapItem *) myMapItem];
+//			event.mapItem =  [NSKeyedArchiver archivedDataWithRootObject:newMapItem];
+			event.mapItem = myData;
+			requestsReturnedCount++;
+			
+			if (requestsReturnedCount == requestsMadeCount) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"DoneLoadingLocations"
+                                                        object:self];
+			}
+			
+			if (![self.managedObjectContext save:&error]) {
+				NSLog(@"%s: Problem saving: %@", __PRETTY_FUNCTION__, error);
+			}
+			if (error) {
+				NSLog (@"error getting mapItem");
+			}
+
+	}];
 }
 - (NSDate*) processBeginDate: (NSDictionary*) newEvent {
 
@@ -180,8 +225,8 @@ int beginHour;
         NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
 
         for (Event *event in fetchedObjects) {
-
-			NSLog (@"Event %@ %@ %@ %@", event.eventId, event.name, event.beginDate, event.endDate);
+			CEMapItem *mapItem = [NSKeyedUnarchiver unarchiveObjectWithData:event.mapItem];
+			NSLog (@"Event %@ %@ %@ %@ %@ %@", event.eventId, event.name, event.beginDate, event.endDate, mapItem.name, mapItem.eventId);
     }
 }
 - (NSArray *) arrayOfEvents {
@@ -204,7 +249,32 @@ int beginHour;
 		return fetchedObjects;
 
 }
+- (NSArray *) arrayOfMapItems {
+//	LogMethod();
+//        NSLog(@"***************listEvents**********");
 
+		NSError *error = nil;
+
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" 
+                                                  inManagedObjectContext:self.managedObjectContext];
+        [fetchRequest setEntity:entity];
+				
+//		[fetchRequest setSortDescriptors: @[ [[NSSortDescriptor alloc] initWithKey: @"eventId" ascending:YES] ]];
+    
+		NSArray *fetchedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+		
+		NSMutableArray *mapItemsArray = [[NSMutableArray alloc] initWithCapacity: [fetchedObjects count]];
+		for (Event *event in fetchedObjects) {
+			CEMapItem *mapItem = [NSKeyedUnarchiver unarchiveObjectWithData:event.mapItem];
+			if (mapItem) {
+				[mapItemsArray addObject: mapItem];
+			}
+    }
+		
+		return mapItemsArray;
+
+}
 - (void)removeAllEventsFromCoreData {
 //    LogMethod();
     

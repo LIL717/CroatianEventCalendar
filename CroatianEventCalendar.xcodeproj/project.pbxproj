@@ -30,6 +30,9 @@
 		701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D76181EC513007FFDF1 /* EventsInCoreData.m */; };
 		701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C3D79181EE0A4007FFDF1 /* Event.m */; };
 		7033092618F74D5D00F183E7 /* UILabel+AllowCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7033092518F74D5D00F183E7 /* UILabel+AllowCopy.m */; };
+		7033092E18F8923D00F183E7 /* EventsMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7033092D18F8923D00F183E7 /* EventsMapViewController.m */; };
+		7033093118F8C98500F183E7 /* CEMapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7033093018F8C98500F183E7 /* CEMapItem.m */; };
+		7033093418F8E54900F183E7 /* CEAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7033093318F8E54900F183E7 /* CEAnnotation.m */; };
 		708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */ = {isa = PBXBuildFile; fileRef = 708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */; };
 		709E041B18F3AA74007165D6 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 709E041518F3AA73007165D6 /* libTestFlight.a */; };
 		709E041C18F3AA74007165D6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 709E041618F3AA73007165D6 /* README.md */; };
@@ -83,6 +86,13 @@
 		701C3D79181EE0A4007FFDF1 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 		7033092418F74D5D00F183E7 /* UILabel+AllowCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UILabel+AllowCopy.h"; path = "Categories/UILabel+AllowCopy.h"; sourceTree = "<group>"; };
 		7033092518F74D5D00F183E7 /* UILabel+AllowCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UILabel+AllowCopy.m"; path = "Categories/UILabel+AllowCopy.m"; sourceTree = "<group>"; };
+		7033092C18F8923D00F183E7 /* EventsMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsMapViewController.h; sourceTree = "<group>"; };
+		7033092D18F8923D00F183E7 /* EventsMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsMapViewController.m; sourceTree = "<group>"; };
+		7033092F18F8C98500F183E7 /* CEMapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEMapItem.h; sourceTree = "<group>"; };
+		7033093018F8C98500F183E7 /* CEMapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEMapItem.m; sourceTree = "<group>"; };
+		7033093218F8E54900F183E7 /* CEAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CEAnnotation.h; sourceTree = "<group>"; };
+		7033093318F8E54900F183E7 /* CEAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CEAnnotation.m; sourceTree = "<group>"; };
+		7033093518FAF7AC00F183E7 /* SplitViewButtonHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewButtonHandler.h; sourceTree = "<group>"; };
 		708BDB6018E9E63600077A0A /* UIAlertView+Commodity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Commodity.h"; sourceTree = "<group>"; };
 		708BDB6118E9E63600077A0A /* UIAlertView+Commodity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Commodity.m"; sourceTree = "<group>"; };
 		709E041518F3AA73007165D6 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
@@ -229,6 +239,10 @@
 			children = (
 				701C3D78181EE0A4007FFDF1 /* Event.h */,
 				701C3D79181EE0A4007FFDF1 /* Event.m */,
+				7033092F18F8C98500F183E7 /* CEMapItem.h */,
+				7033093018F8C98500F183E7 /* CEMapItem.m */,
+				7033093218F8E54900F183E7 /* CEAnnotation.h */,
+				7033093318F8E54900F183E7 /* CEAnnotation.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -249,6 +263,8 @@
 				701C3D36181EBCBA007FFDF1 /* MasterViewController.m */,
 				701C3D38181EBCBA007FFDF1 /* DetailViewController.h */,
 				701C3D39181EBCBA007FFDF1 /* DetailViewController.m */,
+				7033092C18F8923D00F183E7 /* EventsMapViewController.h */,
+				7033092D18F8923D00F183E7 /* EventsMapViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -282,6 +298,7 @@
 		708BDB6418E9E67A00077A0A /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7033093518FAF7AC00F183E7 /* SplitViewButtonHandler.h */,
 				708BDB6318E9E65300077A0A /* UIAlertView+Commodity */,
 			);
 			name = Classes;
@@ -440,9 +457,12 @@
 				701C3D37181EBCBA007FFDF1 /* MasterViewController.m in Sources */,
 				7033092618F74D5D00F183E7 /* UILabel+AllowCopy.m in Sources */,
 				701C3D7A181EE0A4007FFDF1 /* Event.m in Sources */,
+				7033092E18F8923D00F183E7 /* EventsMapViewController.m in Sources */,
 				701C3D77181EC513007FFDF1 /* EventsInCoreData.m in Sources */,
 				708BDB6218E9E63600077A0A /* UIAlertView+Commodity.m in Sources */,
+				7033093118F8C98500F183E7 /* CEMapItem.m in Sources */,
 				701C3D34181EBCBA007FFDF1 /* CroatianEventCalendar.xcdatamodeld in Sources */,
+				7033093418F8E54900F183E7 /* CEAnnotation.m in Sources */,
 				701C3D74181EBF21007FFDF1 /* ParseOperation.m in Sources */,
 				701C3D2B181EBCBA007FFDF1 /* AppDelegate.m in Sources */,
 				701C3D27181EBCBA007FFDF1 /* main.m in Sources */,

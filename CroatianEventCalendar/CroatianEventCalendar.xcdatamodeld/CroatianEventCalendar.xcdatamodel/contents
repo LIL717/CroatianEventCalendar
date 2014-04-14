@@ -11,12 +11,13 @@
         <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="link_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mapItem" optional="YES" attributeType="Transformable" valueTransformerName="" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <userInfo/>
     </entity>
     <elements>
-        <element name="Event" positionX="261" positionY="189" width="128" height="210"/>
+        <element name="Event" positionX="261" positionY="189" width="128" height="225"/>
     </elements>
 </model>

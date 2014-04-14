@@ -24,8 +24,6 @@
 @property (nonatomic, strong) EKEvent *calendarEvent;
 @property(nonatomic, retain) NSMutableSet* visitedLinks;
 
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
-
 @property (nonatomic) Reachability *hostReachability;
 @property (nonatomic, assign) BOOL networkIsReachable;
 @property (nonatomic, strong) NSString *eventAddedMessage;
@@ -37,6 +35,9 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma mark - Init/Dealloc
 /////////////////////////////////////////////////////////////////////////////
+
+@synthesize splitViewButton = _splitViewButton;
+
 int savedEndDateHeight;
 int savedBeginDateToEndDateConstraint;
 int savedLinkToDescriptionConstraint;
@@ -444,22 +445,6 @@ int savedEndDateToEmailConstraint;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-#pragma mark - Split view
-
-- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
-{
-    barButtonItem.title = NSLocalizedString(@"All Events", @"All Events");
-    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-    self.masterPopoverController = popoverController;
-}
-
-- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-    // Called when the view is shown again in the split view, invalidating the button and popover controller.
-    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
-    self.masterPopoverController = nil;
-}
 /////////////////////////////////////////////////////////////////////////////
 #pragma mark - Visited Links Managment
 /////////////////////////////////////////////////////////////////////////////
@@ -556,15 +541,6 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
 }
 #pragma mark - Leaving this App
 
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    if ([[segue identifier] isEqualToString:@"WebViewSegue"]) {
-//		WebViewController *webViewController = segue.destinationViewController;
-//		NSString* launchUrl = [NSString stringWithFormat:@"http://%@",[[self.detailItem valueForKey:@"link"] description]];
-//        webViewController.urlObject = [NSURL URLWithString: launchUrl];
-//        
-//    }
-//}
 - (IBAction)openMapWithAddress:(id)sender {
 
 	UIButton *button = (UIButton *)sender;
@@ -714,4 +690,31 @@ id objectForLinkInfo(NSTextCheckingResult* linkInfo)
     [menu setMenuVisible:YES animated:YES];
 }
 
+#pragma mark - Split view
+
+#pragma mark - Split View Handler
+-(void) turnSplitViewButtonOn: (UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *) popoverController {
+    barButtonItem.title = NSLocalizedString(@"All Events", @"All Events");
+    _splitViewButton = barButtonItem;
+    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+    self.masterPopoverController = popoverController;
+}
+
+-(void)turnSplitViewButtonOff {
+    // Called when the view is shown again in the split view, invalidating the button and popover controller.
+    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+    _splitViewButton = nil;
+    self.masterPopoverController = nil;
+    
+}
+
+-(void) setSplitViewButton:(UIBarButtonItem *)splitViewButton forPopoverController:(UIPopoverController *)popoverController {
+    if (splitViewButton != _splitViewButton) {
+        if (splitViewButton) {
+            [self turnSplitViewButtonOn:splitViewButton forPopoverController:popoverController];
+        } else {
+            [self turnSplitViewButtonOff];
+        }
+    }
+}
 @end
