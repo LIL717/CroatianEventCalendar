@@ -128,10 +128,7 @@ int requestsReturnedCount = 0;
 			myMapItem.name = event.name;
 			myMapItem.beginDate = event.beginDate;
 			myMapItem.placemark = newMapItem.placemark;
-			NSData *myData = [[NSData alloc] init];
-			myData = [NSKeyedArchiver archivedDataWithRootObject: (CEMapItem *) myMapItem];
-//			event.mapItem =  [NSKeyedArchiver archivedDataWithRootObject:newMapItem];
-			event.mapItem = myData;
+			event.mapItem = [NSKeyedArchiver archivedDataWithRootObject: (CEMapItem *) myMapItem];
 			requestsReturnedCount++;
 			
 			if (requestsReturnedCount == requestsMadeCount) {
