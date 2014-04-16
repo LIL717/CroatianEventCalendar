@@ -46,7 +46,6 @@ NSNumber *eventIdToFetch;
 	self.appDelegate = (id) [[UIApplication sharedApplication] delegate];
     self.managedObjectContext = [self.appDelegate managedObjectContext];
 	[self.mapView setDelegate:self];
-	self.eventsMapped = NO;
 	
 
 				
@@ -78,10 +77,14 @@ NSNumber *eventIdToFetch;
 }
 - (void) viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-//	if (!self.eventsMapped) {
-//		self.eventsMapped = YES;
-//		[self addPinsToMap];
-//	}
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		if (!pinsMapped) {
+			if ([self.mapItemsArray count] > 0) {
+				[self addPinsToMap];
+				self.eventsMapped = NO;
+			}
+		}
+	}
 
 }
 - (void)didReceiveMemoryWarning
@@ -138,10 +141,7 @@ NSNumber *eventIdToFetch;
 }
 - (void) eventsFinishedLoading {
 	
-	if (!self.eventsMapped) {
-		self.eventsMapped = YES;
 		[self addPinsToMap];
-	}
 }
 
 /*
@@ -164,11 +164,9 @@ NSNumber *eventIdToFetch;
     
 			if ([annotations count] > 0) {
 				[self.mapView showAnnotations:annotations animated:NO];
-				self.eventsMapped = YES;
 
 			} else {
 				[self noEventsToMap];
-				self.eventsMapped = NO;
 			}
 			// Remove progress window
 			[MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -198,10 +196,9 @@ NSNumber *eventIdToFetch;
 								   action:@selector(mapView)];
 			self.masterViewController.navigationItem.leftBarButtonItem = mapButton;
 		} else {
+				// segue to event list
 			[self performSegueWithIdentifier: @"EventsCalendarSegue" sender: self];
 		}
-		// segue to event list
-		self.eventsMapped = NO;
     }
 }
 //- (void ) displayMapWithLocation: (NSString *) location {

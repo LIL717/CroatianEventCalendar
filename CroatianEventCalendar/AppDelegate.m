@@ -364,8 +364,8 @@ static NSString * const kEvents = @"events";
 		int incomingId = [[[incomingEventsArray objectAtIndex: i] valueForKey: @"id"]intValue];
 		int coreDataId;
 
-		//if there aren't any events left in the arrayOfCoreDataEvents then just add the incoming event
-		if ([arrayOfCoreDataEvents count] > 0) {
+		//if there aren't any events left to check in the arrayOfCoreDataEvents then just add the incoming event
+		if ([arrayOfCoreDataEvents count] > j) {
 			coreDataId = [[(Event *) [arrayOfCoreDataEvents objectAtIndex: j] eventId] intValue];
 		} else {
 			[eventsInCoreData addEventToCoreData: [incomingEventsArray objectAtIndex: i]];
