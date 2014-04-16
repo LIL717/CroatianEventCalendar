@@ -78,7 +78,7 @@ NSNumber *eventIdToFetch;
 - (void) viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		if (!pinsMapped) {
+		if (!self.eventsMapped) {
 			if ([self.mapItemsArray count] > 0) {
 				[self addPinsToMap];
 				self.eventsMapped = NO;
