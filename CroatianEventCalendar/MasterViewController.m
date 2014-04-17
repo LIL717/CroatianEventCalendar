@@ -40,6 +40,10 @@
 {
     [super viewDidLoad];
 	
+	//stupid ios 7 bug that won't deselect on back gesture - needs the following line
+	self.clearsSelectionOnViewWillAppear = NO;
+
+	
 	self.appDelegate = (id) [[UIApplication sharedApplication] delegate];
     self.managedObjectContext = [self.appDelegate managedObjectContext];
 
@@ -61,9 +65,10 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
+	LogMethod();
     [super viewDidAppear:animated];
 
-    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated: animated];
 }
 - (void)dealloc {
     
