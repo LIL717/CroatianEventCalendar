@@ -10,7 +10,7 @@
 #import "ParseOperation.h"
 #import "EventsInCoreData.h"
 #import "Event.h"
-#import "SparkInspector.h"
+//#import "SparkInspector.h"
 #import "MasterViewcontroller.h"
 #import "TestFlight.h"
 #import "Flurry.h"
@@ -75,13 +75,11 @@ static NSString * const kEvents = @"events";
                                                        shadow, NSShadowAttributeName,
                                                        [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:25.0], NSFontAttributeName, nil]];
 				
-    // Override point for customization after application launch.
-	
-	//Override point for customization after application launch.
-#define TESTING 1
-#ifdef TESTING
-    [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
-#endif
+    	//Override point for customization after application launch.
+//#define TESTING 1
+//#ifdef TESTING
+//    [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
+//#endif
      //note: iOS only allows one crash reporting tool per app; if using another, set to: NO
      [Flurry setCrashReportingEnabled:YES];
      
