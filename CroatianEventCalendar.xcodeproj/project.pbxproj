@@ -56,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		32775DC14C1264157F9ACC6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		701C3D15181EBCBA007FFDF1 /* CroEvents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CroEvents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		701C3D18181EBCBA007FFDF1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		701C3D1A181EBCBA007FFDF1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -109,7 +110,7 @@
 		709E042018F3D150007165D6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		70B0375F18F46A6B0075F55B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		70F3A52D18FC4A6500DBD497 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		9D9E8F0AB15842239F7E262D /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		7A31C4603D5F80527C5F66D7 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E2DD2203D60C4AD9891F1A2E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -152,7 +153,7 @@
 				701C3D49181EBCBA007FFDF1 /* CroatianEventCalendarTests */,
 				701C3D17181EBCBA007FFDF1 /* Frameworks */,
 				701C3D16181EBCBA007FFDF1 /* Products */,
-				9D9E8F0AB15842239F7E262D /* Pods.xcconfig */,
+				A23F373F675489F8EC99C5DA /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -335,6 +336,15 @@
 			path = "TestFlightSDK3-2";
 			sourceTree = "<group>";
 		};
+		A23F373F675489F8EC99C5DA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				32775DC14C1264157F9ACC6E /* Pods.debug.xcconfig */,
+				7A31C4603D5F80527C5F66D7 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -464,7 +474,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -618,7 +628,7 @@
 		};
 		701C3D54181EBCBB007FFDF1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D9E8F0AB15842239F7E262D /* Pods.xcconfig */;
+			baseConfigurationReference = 32775DC14C1264157F9ACC6E /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -626,7 +636,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CroatianEventCalendar/CroatianEventCalendar-Prefix.pch";
 				INFOPLIST_FILE = "CroatianEventCalendar/CroatianEventCalendar-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flurry",
@@ -639,7 +649,7 @@
 		};
 		701C3D55181EBCBB007FFDF1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D9E8F0AB15842239F7E262D /* Pods.xcconfig */;
+			baseConfigurationReference = 7A31C4603D5F80527C5F66D7 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -648,7 +658,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CroatianEventCalendar/CroatianEventCalendar-Prefix.pch";
 				INFOPLIST_FILE = "CroatianEventCalendar/CroatianEventCalendar-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flurry",

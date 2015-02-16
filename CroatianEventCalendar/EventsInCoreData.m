@@ -41,8 +41,9 @@ int requestsReturnedCount = 0;
 
 	NSDate *date = [self processBeginDate: newEvent];
 
+	NSDate *endDate = [self processEndDate: newEvent];
 	//if event is older than yesterday, don't add it
-	if ([self dateIsOlderThanYesterday: date]) {
+	if ([self dateIsOlderThanYesterday: endDate]) {
 		return;
 	}
 	

@@ -146,7 +146,7 @@
 		
 		UIBarButtonItem *mapButton = [[UIBarButtonItem alloc]
                                initWithTitle:@"Map"
-                               style:UIBarButtonItemStyleBordered 
+                               style:UIBarButtonItemStylePlain
                                target:self 
                                action:@selector(mapView)];
 		self.navigationItem.leftBarButtonItem = mapButton;
@@ -218,9 +218,9 @@
  
     [fetchRequest setFetchBatchSize:20];
 	
-	//only show events that are from yesterday on (so that an ongoing event still appears)
+	//only show events that end from yesterday on (so that an ongoing event still appears)
 	NSDate *yesterdaysDate = [NSDate dateWithTimeIntervalSinceNow: -86400];
-	NSPredicate *predicate = [NSPredicate predicateWithFormat: @"beginDate > %@", yesterdaysDate];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat: @"endDate > %@", yesterdaysDate];
 	
 	[fetchRequest setPredicate:predicate];
  
@@ -282,6 +282,9 @@ arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
+		default:
+			break;
+
     }
 }
  

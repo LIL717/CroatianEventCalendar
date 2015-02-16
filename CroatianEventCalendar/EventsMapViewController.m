@@ -130,7 +130,7 @@ NSNumber *eventIdToFetch;
 			
 			UIBarButtonItem *mapButton = [[UIBarButtonItem alloc]
 								   initWithTitle:@"Map"
-								   style:UIBarButtonItemStyleBordered 
+								   style:UIBarButtonItemStylePlain
 								   target:self.masterViewController
 								   action:@selector(mapView)];
 			self.masterViewController.navigationItem.leftBarButtonItem = mapButton;
@@ -191,7 +191,7 @@ NSNumber *eventIdToFetch;
 			
 			UIBarButtonItem *mapButton = [[UIBarButtonItem alloc]
 								   initWithTitle:@"Map"
-								   style:UIBarButtonItemStyleBordered 
+								   style:UIBarButtonItemStylePlain
 								   target:self.masterViewController
 								   action:@selector(mapView)];
 			self.masterViewController.navigationItem.leftBarButtonItem = mapButton;

@@ -19,11 +19,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-SparkInspector.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,27 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3D2C78C74AFC4D0E8E34F9B0</key>
+		<key>0D2ACBFC29F4EAC626B164AB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A892D3C6366D4F5CAD71C027</key>
+		<key>744B4C9C00F97BC290A3ADC0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AFD77DBCC1F543829E598749</key>
+		<key>C6E805C6ECBF018E927BF300</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B93637E7E6174AE88644432D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EF6F0E7FD5534CA2A8D63E24</key>
+		<key>C9BFFCAC2FBAEF71423FA4DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
