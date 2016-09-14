@@ -12,7 +12,6 @@
 #import "Event.h"
 //#import "SparkInspector.h"
 #import "MasterViewcontroller.h"
-#import "TestFlight.h"
 #import "Flurry.h"
 
 
@@ -78,7 +77,6 @@ static NSString * const kEvents = @"events";
     	//Override point for customization after application launch.
 //#define TESTING 1
 //#ifdef TESTING
-//    [TestFlight takeOff:@"28a6b2db-af02-4d35-a1de-46f4c6a84386"];
 //#endif
      //note: iOS only allows one crash reporting tool per app; if using another, set to: NO
      [Flurry setCrashReportingEnabled:YES];
@@ -126,7 +124,6 @@ static NSString * const kEvents = @"events";
     
     //#define TESTING 1
     //#ifdef TESTING
-    //    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
     //#endif
     
 //    [self setUpURLConnection];
@@ -151,14 +148,40 @@ static NSString * const kEvents = @"events";
     NSURLRequest *eventURLRequest =
     [NSURLRequest requestWithURL:[NSURL URLWithString:feedURLString] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval: 60.0];
     
-    self.webConnection = [[NSURLConnection alloc] initWithRequest:eventURLRequest delegate:self];
-    
-    // Test the validity of the connection object. The most likely reason for the connection object
-    // to be nil is a malformed URL, which is a programmatic error easily detected during development.
-    // If the URL is more dynamic, then you should implement a more flexible validation technique,
-    // and be able to both recover from errors and communicate problems to the user in an
-    // unobtrusive manner.
-    NSAssert(self.webConnection != nil, @"Failure to create URL connection.");
+    [[[NSURLSession sharedSession] dataTaskWithRequest:eventURLRequest
+                                     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+             // back on the main thread, check for errors, if no errors start the parsing
+             //
+             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+             
+             // here we check for any returned NSError from the server, "and" we also check for any http response errors
+             if (error != nil) {
+                 [self handleError:error];
+             }
+             else {
+                 // check for any response errors
+                 NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                 if ((([httpResponse statusCode]/100) == 2) && [[response MIMEType] isEqual:@"text/xml"]) {
+                     //			if ((([httpResponse statusCode]/100) == 2) && [[response MIMEType] isEqual:@"text/xml"]) {
+                     
+                     // Update the UI and start parsing the data,
+                     // Spawn an NSOperation to parse the earthquake data so that the UI is not
+                     // blocked while the application parses the XML data.
+                     //
+                     ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:data];
+                     [self.parseQueue addOperation:parseOperation];
+                 }
+                 else {
+                     NSString *errorString =
+                     NSLocalizedString(@"HTTP Error", @"Error message displayed when receving a connection error.");
+                     NSDictionary *userInfo = @{NSLocalizedDescriptionKey : errorString};
+                     NSError *reportError = [NSError errorWithDomain:@"HTTP"
+                                                                code:[httpResponse statusCode]
+                                                            userInfo:userInfo];
+                     [self handleError:reportError];
+                 }
+             }
+         }] resume];
     
     // Start the status bar network activity indicator. We'll turn it off when the connection
     // finishes or experiences an error.

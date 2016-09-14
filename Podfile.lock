@@ -1,7 +1,7 @@
 PODS:
-  - MBProgressHUD (0.8)
-  - OHAttributedLabel (3.5.3)
-  - Reachability (3.1.1)
+  - MBProgressHUD (1.0.0)
+  - OHAttributedLabel (3.5.5)
+  - Reachability (3.2)
 
 DEPENDENCIES:
   - MBProgressHUD
@@ -9,8 +9,8 @@ DEPENDENCIES:
   - Reachability
 
 SPEC CHECKSUMS:
-  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
-  OHAttributedLabel: 3df8efcb77f1992083648936c92d8d0ac9059279
-  Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  OHAttributedLabel: 9b2eb99323dee6b3a81ef3bc8e98b084117bca2d
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.39.0

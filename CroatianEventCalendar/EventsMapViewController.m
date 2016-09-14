@@ -61,7 +61,7 @@ NSNumber *eventIdToFetch;
 	} else {
 		// Show progress window
 		MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-		hud.labelText = @"Loading Croatian Events";
+		hud.label.text = @"Loading Croatian Events";
 	}
 	[[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(eventsFinishedLoading)
